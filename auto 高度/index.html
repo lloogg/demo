@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <title>auto 高度</title>
+</head>
+
+<body>
+    <div>如果块级正常流的高度设置为 auto，而且只有块级子元素，其默认高度将是从最高块级子元素的外边框边界到最低块级子元素的外边框边界之间的距离。</div>
+    <div style="height: auto; background-color: silver;">
+        <p style="margin-top: 2em; margin-bottom: 2em;">A paragraph!</p>
+    </div>
+    <div>如果块级元素有上内边距或下内边距，或者有上边框或下边框，其高度则是从最高子元素的上外边距边界到最低子元素的下外边界之间的距离。</div>
+    <div style="height: auto; border: 1px solid black; background-color: silver;">
+        <p style="margin-top: 2em; margin-bottom: 2em;">Another paragraph!</p>
+    </div>
+    <br>
+    <div style="height: auto; border: 1px solid black; background-color: silver;">
+        <p style="padding-top: 2px; padding-bottom: 2px;">Yet another paragraph!</p>
+    </div>
+</body>
+
+</html>
