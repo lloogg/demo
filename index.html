@@ -22,6 +22,34 @@
       ></path>
     </svg>
     <script>
+      function edge(x1, y1, x2, y2, e) {
+        let x = e.offsetX;
+        let y = e.offsetY;
+        let xMin = x1;
+        let xMax = x2;
+        let yMin = y1;
+        let yMax = y2;
+        if (x1 > x2) {
+          xMin = x2;
+          xMax = x1;
+        }
+        if (y1 > y2) {
+          yMin = y2;
+          yMax = y1;
+        }
+        console.log(`%c${xMin} ${xMax} ${yMin} ${yMax}`, 'color:green');
+        // vertical
+        if (x1 === x2) {
+          if (x === x1 && y < yMax && y > yMin) {
+            return true;
+          }
+          // horizontal
+        } else if (y1 === y2) {
+          if (y === y1 && x < xMax && x > xMin) {
+            return true;
+          }
+        }
+      }
       let path = document.getElementById('p');
       let x;
       let y;
@@ -30,15 +58,39 @@
         document.onmousemove = null;
         path.setAttribute('stroke-width', '1');
       };
-
+      let paths = [];
       path.addEventListener('mousedown', (e) => {
         x = e.offsetX;
         y = e.offsetY;
+        let d = path
+          .getAttribute('d')
+          .split(' ')
+          .filter((v) => {
+            return /\d/.test(v);
+          });
+        paths = [];
+        for (let i = 0; i < d.length && d[i + 3]; i += 2) {
+          paths.push([d[i], d[i + 1], d[i + 2], d[i + 3]]);
+          let ret = edge(
+            parseInt(d[i]),
+            parseInt(d[i + 1]),
+            parseInt(d[i + 2]),
+            parseInt(d[i + 3]),
+            e,
+          );
+          if (ret) {
+            console.log(d[i], d[i + 1], d[i + 2], d[i + 3]);
+            break;
+          }
+        }
+
+        console.log(paths);
+
         path.setAttribute('stroke-width', '1');
         document.onmousemove = (e) => {
           path.setAttribute(
             'd',
-            `M 10 100 L 12 100 L 12 ${y} L 138 ${y} L 138 100 L 140 100`,
+            `M 10 100 L 15 100 L 15 ${y} L 135 ${y} L 135 100 L 140 100`,
           );
           x = e.offsetX;
           y = e.offsetY;
