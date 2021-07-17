@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <svg height="500" width="500">
+      <g>
+        <foreignObject width="200" height="200">
+          <div>hello</div>
+        </foreignObject>
+      </g>
+      <path
+        id="p"
+        fill="none"
+        stroke="black"
+        stroke-width="1"
+        d="M 10 100 L 140 100"
+      ></path>
+    </svg>
+    <script>
+      let path = document.getElementById('p');
+      let x;
+      let y;
+      document.onmouseup = (e) => {
+        console.log('mouseup');
+        document.onmousemove = null;
+        path.setAttribute('stroke-width', '1');
+      };
+
+      path.addEventListener('mousedown', (e) => {
+        x = e.offsetX;
+        y = e.offsetY;
+        path.setAttribute('stroke-width', '1');
+        document.onmousemove = (e) => {
+          path.setAttribute(
+            'd',
+            `M 10 100 L 12 100 L 12 ${y} L 138 ${y} L 138 100 L 140 100`,
+          );
+          x = e.offsetX;
+          y = e.offsetY;
+          console.log('object');
+          document.body.style.userSelect = 'none';
+        };
+      });
+      path.addEventListener('mouseenter', (e) => {
+        path.setAttribute('stroke-width', '2');
+      });
+      path.addEventListener('mouseout', (e) => {
+        path.setAttribute('stroke-width', '1');
+      });
+    </script>
+  </body>
+</html>
