@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>拖拽改变 div 大小</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body style="position: relative">
+    <div
+      id="div"
+      style="
+        min-width: 40px;
+        min-height: 40px;
+        width: 100px;
+        height: 100px;
+        position: relative;
+        background: #e28c8c;
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: grab;
+      "
+    >
+      <div
+        id="se-handle"
+        style="
+          position: absolute;
+          right: -4px;
+          bottom: -4px;
+          background: #12afce;
+          width: 8px;
+          height: 8px;
+          cursor: se-resize;
+        "
+      ></div>
+    </div>
+    <script>
+      let div = document.getElementById('div');
+      let seHandle = document.getElementById('se-handle');
+      let x, y;
+      function handle(e) {
+        div.style.width = parseInt(div.style.width) + e.clientX - x + 'px';
+        div.style.height = parseInt(div.style.height) + e.clientY - y + 'px';
+        x = e.clientX;
+        y = e.clientY;
+      }
+      function grab(e) {
+        div.style.left = parseInt(div.style.left) + e.clientX - x + 'px';
+        div.style.top = parseInt(div.style.top) + e.clientY - y + 'px';
+        x = e.clientX;
+        y = e.clientY;
+      }
+      seHandle.addEventListener('mousedown', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        console.log(x, y);
+        document.addEventListener('mousemove', handle);
+      });
+      document.addEventListener('mouseup', (e) => {
+        document.removeEventListener('mousemove', handle);
+      });
+      div.addEventListener('mousedown', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        if (e.button === 1) {
+          div.style.cursor = 'grabbing';
+          document.addEventListener('mousemove', grab);
+        }
+      });
+      div.addEventListener('mouseup', (e) => {
+        div.style.cursor = 'grab';
+        document.removeEventListener('mousemove', grab);
+      });
+    </script>
+  </body>
+</html>
