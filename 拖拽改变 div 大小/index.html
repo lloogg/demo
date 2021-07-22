@@ -38,10 +38,49 @@
           cursor: se-resize;
         "
       ></div>
+      <div
+        id="nw-handle"
+        style="
+          position: absolute;
+          top: -4px;
+          left: -4px;
+          background: #12afce;
+          width: 8px;
+          height: 8px;
+          cursor: nw-resize;
+        "
+      ></div>
+      <div
+        id="tr-handle"
+        style="
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: #12afce;
+          width: 8px;
+          height: 8px;
+          cursor: ne-resize;
+        "
+      ></div>
+      <div
+        id="bl-handle"
+        style="
+          position: absolute;
+          bottom: -4px;
+          left: -4px;
+          background: #12afce;
+          width: 8px;
+          height: 8px;
+          cursor: sw-resize;
+        "
+      ></div>
     </div>
     <script>
       let div = document.getElementById('div');
       let seHandle = document.getElementById('se-handle');
+      let nwHandle = document.getElementById('nw-handle');
+      let trHandle = document.getElementById('tr-handle');
+      let blHandle = document.getElementById('bl-handle');
       let x, y;
       function handle(e) {
         div.style.width = parseInt(div.style.width) + e.clientX - x + 'px';
@@ -55,10 +94,55 @@
         x = e.clientX;
         y = e.clientY;
       }
+
+      function nw(e) {
+        let l = div.style.left;
+        let t = div.style.top;
+        div.style.left = parseInt(div.style.left) + e.clientX - x + 'px';
+        div.style.top = parseInt(div.style.top) + e.clientY - y + 'px';
+        div.style.width = parseInt(div.style.width) - e.clientX + x + 'px';
+        if (parseInt(div.style.width) < 40) {
+          div.style.width = '40px';
+          div.style.left = l;
+        }
+        div.style.height = parseInt(div.style.height) - e.clientY + y + 'px';
+        if (parseInt(div.style.height) < 40) {
+          div.style.height = '40px';
+          div.style.top = t;
+        }
+        x = e.clientX;
+        y = e.clientY;
+      }
+
+      function tr(e) {
+        let t = div.style.top;
+        div.style.top = parseInt(div.style.top) + e.clientY - y + 'px';
+        div.style.width = parseInt(div.style.width) + e.clientX - x + 'px';
+
+        div.style.height = parseInt(div.style.height) - e.clientY + y + 'px';
+        if (parseInt(div.style.height) < 40) {
+          div.style.height = '40px';
+          div.style.top = t;
+        }
+        x = e.clientX;
+        y = e.clientY;
+      }
+      function bl(e) {
+        let l = div.style.left;
+        div.style.left = parseInt(div.style.left) + e.clientX - x + 'px';
+        div.style.width = parseInt(div.style.width) - e.clientX + x + 'px';
+        if (parseInt(div.style.width) < 40) {
+          div.style.width = '40px';
+          div.style.left = l;
+        }
+        div.style.height = parseInt(div.style.height) + e.clientY - y + 'px';
+
+        x = e.clientX;
+        y = e.clientY;
+      }
       seHandle.addEventListener('mousedown', (e) => {
         x = e.clientX;
         y = e.clientY;
-        console.log(x, y);
         document.addEventListener('mousemove', handle);
       });
       document.addEventListener('mouseup', (e) => {
@@ -72,9 +156,34 @@
           document.addEventListener('mousemove', grab);
         }
       });
-      div.addEventListener('mouseup', (e) => {
+      document.addEventListener('mouseup', (e) => {
         div.style.cursor = 'grab';
         document.removeEventListener('mousemove', grab);
+      });
+      nwHandle.addEventListener('mousedown', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        document.addEventListener('mousemove', nw);
+      });
+      document.addEventListener('mouseup', (e) => {
+        document.removeEventListener('mousemove', nw);
+      });
+
+      trHandle.addEventListener('mousedown', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        document.addEventListener('mousemove', tr);
+      });
+      document.addEventListener('mouseup', (e) => {
+        document.removeEventListener('mousemove', tr);
+      });
+      blHandle.addEventListener('mousedown', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        document.addEventListener('mousemove', bl);
+      });
+      document.addEventListener('mouseup', (e) => {
+        document.removeEventListener('mousemove', bl);
       });
     </script>
   </body>
