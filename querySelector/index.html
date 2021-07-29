@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 class="blue" data-type="ok" data="nope">
+      <div class="div">
+        <h1>ok</h1>
+        <div>
+          <h1>
+            <div>h1</div>
+          </h1>
+        </div>
+      </div>
+    </h1>
+    <div class="div">
+      <h1>ok</h1>
+      <div>
+        <h1 class="blue" data-type="ok">
+          <div>h1</div>
+        </h1>
+      </div>
+    </div>
+
+    <div id="test-clone">
+      <div id="test-clone-child">test-clone-child</div>
+    </div>
+    <script>
+      document
+        .querySelectorAll('body   h1.blue[data-type][data]')
+        .forEach((el) => {
+          console.log(el.innerHTML);
+        });
+      console.log(document.body.event);
+
+      let el = document.getElementById('test-clone');
+
+      document
+        .getElementById('test-clone-child')
+        .addEventListener('click', () => {
+          console.log('test clone child');
+        });
+      el.replaceWith(el.cloneNode(true));
+    </script>
+  </body>
+</html>
