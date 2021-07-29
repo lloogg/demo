@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>bind</title>
+  </head>
+  <body>
+    <script>
+      class View {
+        constructor(el) {
+          this.el = el;
+          this.el.addEventListener('click', this.onClick);
+          this.el.addEventListener('click', this.onClickBind.bind(this));
+        }
+        onClick(e) {
+          console.log(this);
+        }
+
+        onClickBind(e) {
+          console.log(this);
+        }
+      }
+      let view = new View(document);
+    </script>
+  </body>
+</html>
