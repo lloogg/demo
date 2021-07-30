@@ -27,22 +27,38 @@
     <div id="test-clone">
       <div id="test-clone-child">test-clone-child</div>
     </div>
+
+    <div id="a">
+      <div class="b">
+        <div class="c">a > b > c</div>
+      </div>
+      <div class="b">
+        <div class="d">
+          <div class="c">a > b > d > c</div>
+        </div>
+      </div>
+    </div>
     <script>
-      document
-        .querySelectorAll('body   h1.blue[data-type][data]')
-        .forEach((el) => {
-          console.log(el.innerHTML);
-        });
-      console.log(document.body.event);
+      // document
+      //   .querySelectorAll('body   h1.blue[data-type][data]')
+      //   .forEach((el) => {
+      //     console.log(el.innerHTML);
+      //   });
+      // console.log(document.body.event);
 
-      let el = document.getElementById('test-clone');
+      // let el = document.getElementById('test-clone');
 
-      document
-        .getElementById('test-clone-child')
-        .addEventListener('click', () => {
-          console.log('test clone child');
-        });
-      el.replaceWith(el.cloneNode(true));
+      // document
+      //   .getElementById('test-clone-child')
+      //   .addEventListener('click', () => {
+      //     console.log('test clone child');
+      //   });
+      // el.replaceWith(el.cloneNode(true));
+
+      let a = document.getElementById('a');
+      a.querySelectorAll('.b .c').forEach((el) => {
+        console.log(el);
+      });
     </script>
   </body>
 </html>
