@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>this</title>
+  </head>
+  <body>
+    <div class="root">
+      <div class="child">child</div>
+      <div class="child">child</div>
+      <div class="child">child</div>
+      <div class="child-data" data="data">child</div>
+      <div class="child-data" data="data">child</div>
+      <div class="child-data" data="data">child</div>
+    </div>
+    <script>
+      let obj = {
+        map: new Map(),
+        $(el,selector) {
+          if (!this.map.has(el)) {
+            this.map.set(el, []);
+          }
+          if (typeof el === 'string' || el instanceof String) {
+            // els 是 selectors
+            this.els = el;
+            this.el = document.querySelectorAll(el);
+            if(selector)
+          } else {
+            this.el = el;
+          }
+          return this;
+        },
+        on(name, fn) {
+          if (this.el instanceof NodeList) {
+            this.el.forEach((ele) => {
+              ele.addEventListener(name, fn);
+            });
+            this.map.get(this.els).push(fn);
+          } else {
+            this.el.addEventListener(name, fn);
+            this.map.get(this.el).push(fn);
+          }
+          return this;
+        },
+        off(name, fn) {
+          if (fn) {
+            // 如果是 querySelectorAll
+            if (this.el instanceof NodeList) {
+              this.el.forEach((ele) => {
+                ele.removeEventListener(name, fn);
+              });
+              let idx = this.map.get(this.els).indexOf(fn);
+              if (idx !== -1) {
+                this.map.get(this.els).splice(idx, 1);
+              }
+              if (this.map.get(this.els).length === 0) {
+                this.map.delete(this.els);
+              }
+            } else {
+              this.el.removeEventListener(name, fn);
+              let idx = this.map.get(this.el).indexOf(fn);
+              if (idx !== -1) {
+                this.map.get(this.el).splice(idx, 1);
+              }
+              if (this.map.size === 0) {
+                this.map.delete(this.el);
+              }
+            }
+          } else {
+            if (this.el instanceof NodeList) {
+              this.el.forEach((ele) => {
+                this.map.get(this.els).forEach((listener) => {
+                  ele.removeEventListener(name, listener);
+                });
+              });
+              this.map.delete(this.els);
+            } else {
+              this.map.get(this.el).forEach((listener) => {
+                this.el.removeEventListener(name, listener);
+              });
+              this.map.delete(this.el);
+            }
+          }
+          return this;
+        },
+      };
+      let query = obj.$.bind(obj);
+      let root = document.querySelector('.root');
+      function cl() {
+        console.log('object');
+      }
+      function ick() {
+        console.log('ick');
+      }
+      function dbl() {
+        console.log('dbl');
+      }
+      function dblclick() {
+        console.log('dblclick');
+      }
+      console.log(query(root).on('click', cl));
+      console.log(query(root).on('click', ick));
+      console.log(query(root).off('click', cl));
+      console.log(query(root).off('click'));
+      console.log(query('.root .child').on('click', cl));
+      console.log(query('.root .child-data[data]').on('click', ick));
+      console.log(query('.root .child-data[data]').on('click', dbl));
+      console.log(query('.root .child').off('click', cl));
+      console.log(query('.root .child-data[data]').off('click', cl));
+    </script>
+  </body>
+</html>
