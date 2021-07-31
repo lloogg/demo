@@ -16,17 +16,21 @@
     <script>
       let obj = {
         map: new Map(),
-        $(el,selector) {
+        $(el, selector) {
           if (!this.map.has(el)) {
             this.map.set(el, []);
           }
           if (typeof el === 'string' || el instanceof String) {
             // els 是 selectors
             this.els = el;
+
             this.el = document.querySelectorAll(el);
-            if(selector)
           } else {
-            this.el = el;
+            if (selector) {
+              this.el = el.querySelectorAll(selector);
+            } else {
+              this.el = el;
+            }
           }
           return this;
         },
