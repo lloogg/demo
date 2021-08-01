@@ -16,25 +16,21 @@
     <script>
       let obj = {
         map: new Map(),
-        $(el, selector) {
+        // el: string or element
+        $(el) {
           if (!this.map.has(el)) {
             this.map.set(el, []);
           }
           if (typeof el === 'string' || el instanceof String) {
             // els 是 selectors
             this.els = el;
-
             this.el = document.querySelectorAll(el);
           } else {
-            if (selector) {
-              this.el = el.querySelectorAll(selector);
-            } else {
-              this.el = el;
-            }
+            this.el = el;
           }
           return this;
         },
-        on(name, fn) {
+        on(name, selector, fn) {
           if (this.el instanceof NodeList) {
             this.el.forEach((ele) => {
               ele.addEventListener(name, fn);
@@ -46,7 +42,7 @@
           }
           return this;
         },
-        off(name, fn) {
+        off(name, selector, fn) {
           if (fn) {
             // 如果是 querySelectorAll
             if (this.el instanceof NodeList) {
@@ -102,6 +98,7 @@
       function dblclick() {
         console.log('dblclick');
       }
+      console.log(query(root));
       console.log(query(root).on('click', cl));
       console.log(query(root).on('click', ick));
       console.log(query(root).off('click', cl));
