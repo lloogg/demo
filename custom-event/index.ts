@@ -272,6 +272,7 @@ function testNamespace6() {
 
 function testNamespace7() {
   // * fail
+  // ! 不支持 namespace 叠加的 off
   query(root).on('click.v1', fn);
   query(root).on('click.v1', fn);
   query(root).on('click.v1.v2', fn);
