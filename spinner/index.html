@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spinner</title>
+    <style>
+      .spin {
+        animation: spin 0.1s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="div"
+      style="
+        width: 100px;
+        height: 100px;
+        background-color: cornflowerblue;
+        position: absolute;
+        border-radius: 10%;
+      "
+    ></div>
+    <div
+      class="spin"
+      style="
+        width: 100px;
+        height: 100px;
+        background-color: cornflowerblue;
+        position: absolute;
+        border-radius: 10%;
+        top: 300px;
+      "
+    ></div>
+    <script>
+      let deg = 0;
+      let radix = 0;
+      let interval;
+      let div = document.getElementById('div');
+      function startSpin() {
+        // let duration = 10;
+        // let interval = setInterval(() => {
+        //   if (duration > 0.1) {
+        //     duration /= 2;
+        //   }
+        //   div.style.animationDuration = `${duration}s`; // 会重新开始动画
+        // }, 1000);
+
+        interval = setInterval(() => {
+          deg += radix;
+          radix += 0.1;
+          if (deg > 360) {
+            deg -= 360;
+          }
+          if (radix < 100) {
+            radix += 0.1;
+          }
+
+          div.style.transform = `rotate(${deg}deg)`;
+        }, 10);
+      }
+      function endSpin() {
+        clearInterval(interval);
+        interval = setInterval(() => {
+          if (radix > 0) {
+            radix -= 0.1;
+          }
+          if (deg < 360) {
+            deg += radix;
+            div.style.transform = `rotate(${deg}deg)`;
+          } else {
+            clearInterval(interval);
+          }
+        }, 1);
+      }
+      div.addEventListener('mouseenter', startSpin);
+      div.addEventListener('mouseleave', endSpin);
+    </script>
+  </body>
+</html>

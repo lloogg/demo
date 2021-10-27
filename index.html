@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Document</title>
+    <style>
+      path {
+        shape-rendering: crispEdges;
+      }
+    </style>
   </head>
 
   <body>
@@ -13,13 +18,15 @@
           <div>hello</div>
         </foreignObject>
       </g>
-      <path
-        id="p"
-        fill="none"
-        stroke="black"
-        stroke-width="1"
-        d="M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100"
-      ></path>
+      <g>
+        <path
+          id="p"
+          fill="none"
+          stroke="black"
+          stroke-width="1"
+          d="M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100"
+        ></path>
+      </g>
     </svg>
     <script>
       function edge(x1, y1, x2, y2, e) {
@@ -110,12 +117,12 @@
           document.body.style.userSelect = 'none';
         };
       });
-      //   path.addEventListener('mouseenter', (e) => {
-      //     path.setAttribute('stroke-width', '2');
-      //   });
-      //   path.addEventListener('mouseout', (e) => {
-      //     path.setAttribute('stroke-width', '1');
-      //   });
+      // path.addEventListener('mouseenter', (e) => {
+      //   path.setAttribute('stroke-width', '5');
+      // });
+      // path.addEventListener('mouseout', (e) => {
+      //   path.setAttribute('stroke-width', '1');
+      // });
     </script>
   </body>
 </html>
