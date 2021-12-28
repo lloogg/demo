@@ -1,5 +1,13 @@
 {
+  "description": "demo",
+  "contributors": [
+    "septlog"
+  ],
   "devDependencies": {
     "typescript": "^4.5.4"
-  }
+  },
+  "scripts": {
+    "watch": "tsc --watch"
+  },
+  "license": "MIT"
 }
