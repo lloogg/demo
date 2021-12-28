@@ -31,7 +31,7 @@ class Edge {
     this.g.setAttribute('transform', 'translate(0.5, 0.5)');
     this.handle = document.createElementNS(xmlns, 'path') as SVGPathElement;
     this.handle.setAttribute('fill', 'none');
-    this.handle.setAttribute('stroke', 'aqua');
+    this.handle.setAttribute('stroke', 'lightblue');
     this.handle.setAttribute('stroke-width', '5');
     this.handle.setAttribute('stroke-linejoin', 'bevel');
     this.handle.setAttribute('d', d);
@@ -119,35 +119,62 @@ class Edge {
       }
 
       document.onmousemove = (e) => {
-        let x = e.offsetX;
-        let y = e.offsetY;
-        if (chosenLine) {
-          if (chosenLine.dir === 'left' || chosenLine.dir === 'right') {
-            chosenLine.source.y = y;
-            chosenLine.target.y = y;
-          } else if (chosenLine.dir === 'top' || chosenLine.dir === 'bottom') {
-            chosenLine.source.x = x;
-            chosenLine.target.x = x;
+        if (e.ctrlKey) {
+          for (let i = 0; i < this.points.length; i++) {
+            let point = this.points[i];
+            point.x = point.x + e.offsetX - x;
+            point.y = point.y + e.offsetY - y;
           }
-        }
-        let newD = '';
-        for (let i = 0; i < this.points.length; i++) {
-          let point = this.points[i];
-          if (i === 0) {
-            newD += `M ${point.x} ${point.y}`;
-          } else {
-            newD += ` L ${point.x} ${point.y}`;
+          let newD = '';
+          for (let i = 0; i < this.points.length; i++) {
+            let point = this.points[i];
+            if (i === 0) {
+              newD += `M ${point.x} ${point.y}`;
+            } else {
+              newD += ` L ${point.x} ${point.y}`;
+            }
           }
-        }
-        this.d = newD;
-        this.path.setAttribute('d', newD);
-        this.handle.setAttribute('d', newD);
-        if (chosenLine === this.lastLine) {
+          x = e.offsetX;
+          y = e.offsetY;
+          this.d = newD;
+          this.path.setAttribute('d', newD);
+          this.handle.setAttribute('d', newD);
           this.drawArrowEnd();
-        } else if (chosenLine === this.firstLine) {
           this.drawArrowStart();
+        } else {
+          let x = e.offsetX;
+          let y = e.offsetY;
+          if (chosenLine) {
+            if (chosenLine.dir === 'left' || chosenLine.dir === 'right') {
+              chosenLine.source.y = y;
+              chosenLine.target.y = y;
+            } else if (
+              chosenLine.dir === 'top' ||
+              chosenLine.dir === 'bottom'
+            ) {
+              chosenLine.source.x = x;
+              chosenLine.target.x = x;
+            }
+          }
+          let newD = '';
+          for (let i = 0; i < this.points.length; i++) {
+            let point = this.points[i];
+            if (i === 0) {
+              newD += `M ${point.x} ${point.y}`;
+            } else {
+              newD += ` L ${point.x} ${point.y}`;
+            }
+          }
+          this.d = newD;
+          this.path.setAttribute('d', newD);
+          this.handle.setAttribute('d', newD);
+          if (chosenLine === this.lastLine) {
+            this.drawArrowEnd();
+          } else if (chosenLine === this.firstLine) {
+            this.drawArrowStart();
+          }
+          this.changeArrowDirection();
         }
-        this.changeArrowDirection();
       };
     });
   }
