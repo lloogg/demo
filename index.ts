@@ -229,7 +229,6 @@ class Edge {
     ) as SVGPathElement;
 
     this.arrowStart.addEventListener('mousedown', (e) => {
-      console.log('adf');
       document.onmousemove = (e) => {
         this.firstLine.source.y = e.offsetY;
         this.firstLine.target.y = e.offsetY;
