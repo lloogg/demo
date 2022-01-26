@@ -3,3 +3,6 @@ dist
 node_modules
 dist
 .cache
+target
+*.cmi
+*.cmo

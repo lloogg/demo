@@ -4,125 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Document</title>
-    <style>
-      path {
-        shape-rendering: crispEdges;
-      }
-    </style>
   </head>
+  <body style="position: relative">
+    <svg height="500" width="500"></svg>
+    <!-- <svg height="500" width="500" transform="translate(0.5, 0.5)">
+      <path
+        d="M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100"
+        stroke="lightblue"
+        stroke-width="5"
+        fill="none"
+        stroke-linejoin="bevel"
+      ></path>
+      <path
+        d="M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100"
+        stroke="black"
+        stroke-width="1"
+        fill="none"
+        stroke-linejoin="bevel"
+      ></path>
+    </svg> -->
 
-  <body>
-    <svg height="500" width="500">
-      <g>
-        <foreignObject width="200" height="200">
-          <div>hello</div>
-        </foreignObject>
-      </g>
-      <g>
-        <path
-          id="p"
-          fill="none"
-          stroke="black"
-          stroke-width="1"
-          d="M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100"
-        ></path>
-      </g>
-    </svg>
-    <script>
-      function edge(x1, y1, x2, y2, e) {
-        let x = e.offsetX;
-        let y = e.offsetY;
-        let xMin = x1;
-        let xMax = x2;
-        let yMin = y1;
-        let yMax = y2;
-        if (x1 > x2) {
-          xMin = x2;
-          xMax = x1;
-        }
-        if (y1 > y2) {
-          yMin = y2;
-          yMax = y1;
-        }
-        // vertical
-        if (x1 === x2) {
-          if (x === x1 && y < yMax && y > yMin) {
-            return 'vertical';
-          }
-          // horizontal
-        } else if (y1 === y2) {
-          if (y === y1 && x < xMax && x > xMin) {
-            return 'horizontal';
-          }
-        }
-      }
-      let path = document.getElementById('p');
-      let x;
-      let y;
-      document.onmouseup = (e) => {
-        console.log('mouseup');
-        document.onmousemove = null;
-        path.setAttribute('stroke-width', '1');
-      };
-      path.addEventListener('mousedown', (e) => {
-        x = e.offsetX;
-        y = e.offsetY;
-        let ret;
-        let d = path
-          .getAttribute('d')
-          .split(' ')
-          .filter((v) => {
-            return /\d/.test(v);
-          });
-        for (let i = 0; i < d.length && d[i + 3]; i += 2) {
-          ret = edge(
-            parseInt(d[i]),
-            parseInt(d[i + 1]),
-            parseInt(d[i + 2]),
-            parseInt(d[i + 3]),
-            e,
-          );
-
-          if (ret === 'vertical') {
-            d[i] = '$';
-            d[i + 2] = '$';
-            break;
-          } else if (ret === 'horizontal') {
-            d[i + 1] = '$';
-            d[i + 3] = '$';
-            break;
-          }
-        }
-        console.log(d.join(' '));
-        let newD = [];
-        for (let i = 0; i < d.length; i++) {
-          newD.push(d[i]);
-          if (i !== 0 && i !== d.length - 1 && i % 2 === 1) {
-            newD.push('L');
-          }
-        }
-        console.log('M ' + newD.join(' '));
-        let temp = 'M ' + newD.join(' ');
-
-        path.setAttribute('stroke-width', '1');
-        document.onmousemove = (e) => {
-          console.log(temp);
-          if (ret === 'vertical') {
-            path.setAttribute('d', temp.replace(/\$/g, x));
-          } else if (ret === 'horizontal') {
-            path.setAttribute('d', temp.replace(/\$/g, y));
-          }
-          x = e.offsetX;
-          y = e.offsetY;
-          document.body.style.userSelect = 'none';
-        };
-      });
-      // path.addEventListener('mouseenter', (e) => {
-      //   path.setAttribute('stroke-width', '5');
-      // });
-      // path.addEventListener('mouseout', (e) => {
-      //   path.setAttribute('stroke-width', '1');
-      // });
-    </script>
+    <script src="./dist/index.js"></script>
+    <script src="./dist/node.js"></script>
   </body>
 </html>
