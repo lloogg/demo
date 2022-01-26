@@ -1,3 +1,5 @@
+import { Graph } from './graph';
+
 let xmlns = 'http://www.w3.org/2000/svg';
 
 interface Point {
@@ -11,7 +13,7 @@ interface Line {
   source: Point;
   target: Point;
 }
-class Edge {
+export class Edge {
   d: string = null;
   g: SVGGElement = null;
   svg: SVGSVGElement = document.getElementsByTagName('svg')[0];
@@ -25,6 +27,7 @@ class Edge {
   arrowEnd: SVGPathElement = null;
   firstLine: Line = null;
   lastLine: Line = null;
+  graph: Graph;
   constructor(d: string) {
     this.d = d;
     this.g = document.createElementNS(xmlns, 'g') as SVGGElement;
@@ -262,25 +265,45 @@ class Edge {
 
     this.arrowEnd.addEventListener('mousedown', (e) => {
       document.onmousemove = (e) => {
-        this.lastLine.source.y = e.offsetY;
-        this.lastLine.target.y = e.offsetY;
-        this.lastLine.target.x = e.offsetX;
-        let newD = '';
-        for (let i = 0; i < this.points.length; i++) {
-          let point = this.points[i];
-          if (i === 0) {
-            newD += `M ${point.x} ${point.y}`;
-          } else {
-            newD += ` L ${point.x} ${point.y}`;
+        if (Math.abs(e.offsetX - 200) < 20 && Math.abs(e.offsetY - 200) < 20) {
+          this.lastLine.source.y = 200;
+          this.lastLine.target.y = 200;
+          this.lastLine.target.x = 200;
+          let newD = '';
+          for (let i = 0; i < this.points.length; i++) {
+            let point = this.points[i];
+            if (i === 0) {
+              newD += `M ${point.x} ${point.y}`;
+            } else {
+              newD += ` L ${point.x} ${point.y}`;
+            }
           }
+          this.d = newD;
+          this.path.setAttribute('d', newD);
+          this.handle.setAttribute('d', newD);
+          this.drawArrowEnd();
+          this.changeArrowDirection();
+          document.body.style.cursor = 'grab';
+        } else {
+          this.lastLine.source.y = e.offsetY;
+          this.lastLine.target.y = e.offsetY;
+          this.lastLine.target.x = e.offsetX;
+          let newD = '';
+          for (let i = 0; i < this.points.length; i++) {
+            let point = this.points[i];
+            if (i === 0) {
+              newD += `M ${point.x} ${point.y}`;
+            } else {
+              newD += ` L ${point.x} ${point.y}`;
+            }
+          }
+          this.d = newD;
+          this.path.setAttribute('d', newD);
+          this.handle.setAttribute('d', newD);
+          this.drawArrowEnd();
+          this.changeArrowDirection();
+          document.body.style.cursor = 'grab';
         }
-        this.d = newD;
-        this.path.setAttribute('d', newD);
-        this.handle.setAttribute('d', newD);
-
-        this.drawArrowEnd();
-        this.changeArrowDirection();
-        document.body.style.cursor = 'grab';
       };
     });
   }
@@ -334,5 +357,3 @@ class Edge {
     }
   }
 }
-
-let edge = new Edge('M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100');
