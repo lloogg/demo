@@ -1,11 +1,8 @@
 import { Graph } from './graph';
-
+import { Point } from './point';
+import { Node } from './node';
 let xmlns = 'http://www.w3.org/2000/svg';
 
-interface Point {
-  x: number;
-  y: number;
-}
 type Dir = 'top' | 'right' | 'bottom' | 'left';
 
 interface Line {
@@ -16,7 +13,6 @@ interface Line {
 export class Edge {
   d: string = null;
   g: SVGGElement = null;
-  svg: SVGSVGElement = document.getElementsByTagName('svg')[0];
   handle: SVGPathElement = null;
   path: SVGPathElement = null;
   points: Point[] = [];
@@ -27,8 +23,14 @@ export class Edge {
   arrowEnd: SVGPathElement = null;
   firstLine: Line = null;
   lastLine: Line = null;
+  tempX: number;
+  tempY: number;
   graph: Graph;
-  constructor(d: string) {
+  sourceNode: Node;
+  targetNode: Node;
+  chosenLine: Line;
+  constructor(graph: Graph, d: string) {
+    this.graph = graph;
     this.d = d;
     this.g = document.createElementNS(xmlns, 'g') as SVGGElement;
     this.g.setAttribute('transform', 'translate(0.5, 0.5)');
@@ -46,15 +48,17 @@ export class Edge {
     this.path.setAttribute('d', d);
     // 点击无事件
     this.path.style.pointerEvents = 'none';
+    this.path.style.zIndex = '-2';
+    this.handle.style.zIndex = '-2';
     this.g.appendChild(this.handle);
     this.g.appendChild(this.path);
-    this.svg.appendChild(this.g);
+    // this.graph.g.appendChild(this.g);
+    this.graph.g.insertBefore(this.g, this.graph.g.firstChild);
 
-    document.addEventListener('mouseup', () => {
-      // document.removeEventListener('mousemove', this.dragPath.apply(this));
-      document.onmousemove = null;
-      document.body.style.cursor = 'initial';
-    });
+    // document.addEventListener('mouseup', () => {
+    //   document.onmousemove = null;
+    //   document.body.style.cursor = 'initial';
+    // });
 
     // 提取纯数字
     let xyArr = d.split(' ').filter((p) => {
@@ -92,11 +96,74 @@ export class Edge {
     this.addArrowEnd();
     this.drawArrowEnd();
 
+    const lineMouseMove = (e: MouseEvent) => {
+      if (true) {
+        // if (this.sourceNode || this.targetNode) {
+        if (this.chosenLine) {
+          if (
+            this.chosenLine.dir === 'left' ||
+            this.chosenLine.dir === 'right'
+          ) {
+            this.chosenLine.source.y = e.offsetY;
+            this.chosenLine.target.y = e.offsetY;
+          } else if (
+            this.chosenLine.dir === 'top' ||
+            this.chosenLine.dir === 'bottom'
+          ) {
+            this.chosenLine.source.x = e.offsetX;
+            this.chosenLine.target.x = e.offsetX;
+          }
+        }
+        let newD = '';
+        for (let i = 0; i < this.points.length; i++) {
+          let point = this.points[i];
+          if (i === 0) {
+            newD += `M ${point.x} ${point.y}`;
+          } else {
+            newD += ` L ${point.x} ${point.y}`;
+          }
+        }
+        this.d = newD;
+        this.path.setAttribute('d', newD);
+        this.handle.setAttribute('d', newD);
+        if (this.chosenLine === this.lastLine) {
+          this.drawArrowEnd();
+        } else if (this.chosenLine === this.firstLine) {
+          this.drawArrowStart();
+        }
+        this.changeArrowDirection();
+        this.graph.resize();
+      } else {
+        for (let i = 0; i < this.points.length; i++) {
+          let point = this.points[i];
+          point.x = point.x + e.offsetX - this.tempX;
+          point.y = point.y + e.offsetY - this.tempY;
+        }
+        let newD = '';
+        for (let i = 0; i < this.points.length; i++) {
+          let point = this.points[i];
+          if (i === 0) {
+            newD += `M ${point.x} ${point.y}`;
+          } else {
+            newD += ` L ${point.x} ${point.y}`;
+          }
+        }
+        this.tempX = e.offsetX;
+        this.tempY = e.offsetY;
+        this.d = newD;
+        this.path.setAttribute('d', newD);
+        this.handle.setAttribute('d', newD);
+        this.drawArrowEnd();
+        this.drawArrowStart();
+      }
+    };
+
     this.handle.addEventListener('mousedown', (e) => {
-      console.log('handle mousedown');
-      let x = e.offsetX;
-      let y = e.offsetY;
-      let chosenLine: Line = null;
+      e.stopPropagation();
+      this.setSelect(true);
+      this.tempX = e.offsetX;
+      this.tempY = e.offsetY;
+
       for (let i = 0; i < this.lines.length; i++) {
         // 如果这是一条线，不可能 x 相同并且 y 相同
 
@@ -109,76 +176,89 @@ export class Edge {
         let yMax = source.y < target.y ? target.y : source.y;
         if (line.dir === 'left' || line.dir === 'right') {
           // 线是水平的，那么 source.y === target.y
-          if (x < xMax && x > xMin && Math.abs(y - source.y) < 5) {
-            chosenLine = line;
+          if (
+            this.tempX < xMax &&
+            this.tempX > xMin &&
+            Math.abs(this.tempY - source.y) < 5
+          ) {
+            this.chosenLine = line;
             break;
           }
         } else if (line.dir === 'top' || line.dir === 'bottom') {
-          if (y < yMax && y > yMin && Math.abs(x - source.x) < 5) {
-            chosenLine = line;
+          if (
+            this.tempY < yMax &&
+            this.tempY > yMin &&
+            Math.abs(this.tempX - source.x) < 5
+          ) {
+            this.chosenLine = line;
             break;
           }
         }
       }
 
-      document.onmousemove = (e) => {
-        if (e.ctrlKey) {
-          for (let i = 0; i < this.points.length; i++) {
-            let point = this.points[i];
-            point.x = point.x + e.offsetX - x;
-            point.y = point.y + e.offsetY - y;
-          }
-          let newD = '';
-          for (let i = 0; i < this.points.length; i++) {
-            let point = this.points[i];
-            if (i === 0) {
-              newD += `M ${point.x} ${point.y}`;
-            } else {
-              newD += ` L ${point.x} ${point.y}`;
-            }
-          }
-          x = e.offsetX;
-          y = e.offsetY;
-          this.d = newD;
-          this.path.setAttribute('d', newD);
-          this.handle.setAttribute('d', newD);
-          this.drawArrowEnd();
-          this.drawArrowStart();
-        } else {
-          let x = e.offsetX;
-          let y = e.offsetY;
-          if (chosenLine) {
-            if (chosenLine.dir === 'left' || chosenLine.dir === 'right') {
-              chosenLine.source.y = y;
-              chosenLine.target.y = y;
-            } else if (
-              chosenLine.dir === 'top' ||
-              chosenLine.dir === 'bottom'
-            ) {
-              chosenLine.source.x = x;
-              chosenLine.target.x = x;
-            }
-          }
-          let newD = '';
-          for (let i = 0; i < this.points.length; i++) {
-            let point = this.points[i];
-            if (i === 0) {
-              newD += `M ${point.x} ${point.y}`;
-            } else {
-              newD += ` L ${point.x} ${point.y}`;
-            }
-          }
-          this.d = newD;
-          this.path.setAttribute('d', newD);
-          this.handle.setAttribute('d', newD);
-          if (chosenLine === this.lastLine) {
-            this.drawArrowEnd();
-          } else if (chosenLine === this.firstLine) {
-            this.drawArrowStart();
-          }
-          this.changeArrowDirection();
-        }
-      };
+      document.addEventListener('mousemove', lineMouseMove);
+
+      //   document.onmousemove = (e) => {
+      //     if (e.ctrlKey) {
+      //       for (let i = 0; i < this.points.length; i++) {
+      //         let point = this.points[i];
+      //         point.x = point.x + e.offsetX - x;
+      //         point.y = point.y + e.offsetY - y;
+      //       }
+      //       let newD = '';
+      //       for (let i = 0; i < this.points.length; i++) {
+      //         let point = this.points[i];
+      //         if (i === 0) {
+      //           newD += `M ${point.x} ${point.y}`;
+      //         } else {
+      //           newD += ` L ${point.x} ${point.y}`;
+      //         }
+      //       }
+      //       x = e.offsetX;
+      //       y = e.offsetY;
+      //       this.d = newD;
+      //       this.path.setAttribute('d', newD);
+      //       this.handle.setAttribute('d', newD);
+      //       this.drawArrowEnd();
+      //       this.drawArrowStart();
+      //     } else {
+      //       let x = e.offsetX;
+      //       let y = e.offsetY;
+      //       if (chosenLine) {
+      //         if (chosenLine.dir === 'left' || chosenLine.dir === 'right') {
+      //           chosenLine.source.y = y;
+      //           chosenLine.target.y = y;
+      //         } else if (
+      //           chosenLine.dir === 'top' ||
+      //           chosenLine.dir === 'bottom'
+      //         ) {
+      //           chosenLine.source.x = x;
+      //           chosenLine.target.x = x;
+      //         }
+      //       }
+      //       let newD = '';
+      //       for (let i = 0; i < this.points.length; i++) {
+      //         let point = this.points[i];
+      //         if (i === 0) {
+      //           newD += `M ${point.x} ${point.y}`;
+      //         } else {
+      //           newD += ` L ${point.x} ${point.y}`;
+      //         }
+      //       }
+      //       this.d = newD;
+      //       this.path.setAttribute('d', newD);
+      //       this.handle.setAttribute('d', newD);
+      //       if (chosenLine === this.lastLine) {
+      //         this.drawArrowEnd();
+      //       } else if (chosenLine === this.firstLine) {
+      //         this.drawArrowStart();
+      //       }
+      //       this.changeArrowDirection();
+      //     }
+      //   };
+    });
+    document.addEventListener('mouseup', () => {
+      document.removeEventListener('mousemove', lineMouseMove);
     });
   }
 
@@ -231,29 +311,37 @@ export class Edge {
       'path',
     ) as SVGPathElement;
 
-    this.arrowStart.addEventListener('mousedown', (e) => {
-      document.onmousemove = (e) => {
-        this.firstLine.source.y = e.offsetY;
-        this.firstLine.target.y = e.offsetY;
-        this.firstLine.source.x = e.offsetX;
-        let newD = '';
-        for (let i = 0; i < this.points.length; i++) {
-          let point = this.points[i];
-          if (i === 0) {
-            newD += `M ${point.x} ${point.y}`;
-          } else {
-            newD += ` L ${point.x} ${point.y}`;
-          }
+    const arrowStartMove = (e) => {
+      this.firstLine.source.y = e.offsetY;
+      this.firstLine.target.y = e.offsetY;
+      this.firstLine.source.x = e.offsetX;
+      let newD = '';
+      for (let i = 0; i < this.points.length; i++) {
+        let point = this.points[i];
+        if (i === 0) {
+          newD += `M ${point.x} ${point.y}`;
+        } else {
+          newD += ` L ${point.x} ${point.y}`;
         }
-        this.d = newD;
-        this.path.setAttribute('d', newD);
-        this.handle.setAttribute('d', newD);
+      }
+      this.d = newD;
+      this.path.setAttribute('d', newD);
+      this.handle.setAttribute('d', newD);
 
-        this.drawArrowStart();
-        this.changeArrowDirection();
+      this.drawArrowStart();
+      this.changeArrowDirection();
 
-        document.body.style.cursor = 'grab';
-      };
+      document.body.style.cursor = 'grab';
+    };
+
+    this.arrowStart.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      document.addEventListener('mousemove', arrowStartMove);
+    });
+
+    document.addEventListener('mouseup', () => {
+      document.removeEventListener('mousemove', arrowStartMove);
+      document.body.style.cursor = 'initial';
     });
   }
 
@@ -264,45 +352,65 @@ export class Edge {
     this.g.appendChild(this.arrowEnd);
 
     this.arrowEnd.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
       document.onmousemove = (e) => {
-        if (Math.abs(e.offsetX - 200) < 20 && Math.abs(e.offsetY - 200) < 20) {
-          this.lastLine.source.y = 200;
-          this.lastLine.target.y = 200;
-          this.lastLine.target.x = 200;
-          let newD = '';
-          for (let i = 0; i < this.points.length; i++) {
-            let point = this.points[i];
-            if (i === 0) {
-              newD += `M ${point.x} ${point.y}`;
+        let nodes = this.graph.nodes;
+        for (let node of nodes) {
+          // let port = node.port;
+          for (let port of node.ports) {
+            let portX = port.x;
+            let portY = port.y;
+            if (
+              Math.abs(e.offsetX - portX) < 20 &&
+              Math.abs(e.offsetY - portY) < 20
+            ) {
+              // connected
+              this.hideArrowEnd();
+              port.hide();
+              this.lastLine.source.y = portY;
+              this.lastLine.target.y = portY;
+              this.lastLine.target.x = portX;
+              let newD = '';
+              for (let i = 0; i < this.points.length; i++) {
+                let point = this.points[i];
+                if (i === 0) {
+                  newD += `M ${point.x} ${point.y}`;
+                } else {
+                  newD += ` L ${point.x} ${point.y}`;
+                }
+              }
+              this.d = newD;
+              this.path.setAttribute('d', newD);
+              this.handle.setAttribute('d', newD);
+              this.drawArrowEnd();
+              this.changeArrowDirection();
+              document.body.style.cursor = 'grab';
+              break;
             } else {
-              newD += ` L ${point.x} ${point.y}`;
+              this.lastLine.source.y = e.offsetY;
+              this.lastLine.target.y = e.offsetY;
+              this.lastLine.target.x = e.offsetX;
+              let newD = '';
+              for (let i = 0; i < this.points.length; i++) {
+                let point = this.points[i];
+                if (i === 0) {
+                  newD += `M ${point.x} ${point.y}`;
+                } else {
+                  newD += ` L ${point.x} ${point.y}`;
+                }
+              }
+              this.d = newD;
+              this.path.setAttribute('d', newD);
+              this.handle.setAttribute('d', newD);
+              this.drawArrowEnd();
+              this.changeArrowDirection();
+              document.body.style.cursor = 'grab';
+              this.graph.resize(
+                this.lastLine.target.x,
+                this.lastLine.target.y + 4,
+              );
             }
           }
-          this.d = newD;
-          this.path.setAttribute('d', newD);
-          this.handle.setAttribute('d', newD);
-          this.drawArrowEnd();
-          this.changeArrowDirection();
-          document.body.style.cursor = 'grab';
-        } else {
-          this.lastLine.source.y = e.offsetY;
-          this.lastLine.target.y = e.offsetY;
-          this.lastLine.target.x = e.offsetX;
-          let newD = '';
-          for (let i = 0; i < this.points.length; i++) {
-            let point = this.points[i];
-            if (i === 0) {
-              newD += `M ${point.x} ${point.y}`;
-            } else {
-              newD += ` L ${point.x} ${point.y}`;
-            }
-          }
-          this.d = newD;
-          this.path.setAttribute('d', newD);
-          this.handle.setAttribute('d', newD);
-          this.drawArrowEnd();
-          this.changeArrowDirection();
-          document.body.style.cursor = 'grab';
         }
       };
     });
@@ -355,5 +463,40 @@ export class Edge {
       this.lastLine.dir = this.getLineDir(this.lastLine);
       this.drawArrowEnd();
     }
+  }
+
+  setSelect(state: boolean) {
+    if (state) {
+      this.handle.style.opacity = '1';
+    } else {
+      this.handle.style.opacity = '0';
+    }
+  }
+
+  translate(x: number, y: number) {
+    for (let i = 0; i < this.points.length; i++) {
+      let point = this.points[i];
+      point.x = point.x + x;
+      point.y = point.y + y;
+    }
+    let newD = '';
+    for (let i = 0; i < this.points.length; i++) {
+      let point = this.points[i];
+      if (i === 0) {
+        newD += `M ${point.x} ${point.y}`;
+      } else {
+        newD += ` L ${point.x} ${point.y}`;
+      }
+    }
+
+    this.d = newD;
+    this.path.setAttribute('d', newD);
+    this.handle.setAttribute('d', newD);
+    this.drawArrowEnd();
+    this.drawArrowStart();
+  }
+
+  hideArrowEnd() {
+    this.arrowEnd.style.opacity = '0';
   }
 }
