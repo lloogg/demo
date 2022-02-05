@@ -61,37 +61,24 @@ export class Node {
 
     this.graph.g.appendChild(this.g);
 
-    document.addEventListener('mouseup', () => {
-      document.onmousemove = null;
-      document.body.style.cursor = 'initial';
-    });
+    const vertexMouseMove = (e: MouseEvent) => {
+      this.translate(e.offsetX - this.tempX, e.offsetY - this.tempY);
+      this.tempX = e.offsetX;
+      this.tempY = e.offsetY;
+    };
     this.vertex.addEventListener('mousedown', (e) => {
       e.stopPropagation();
       this.setSelect(true);
 
-      let x = e.offsetX;
-      let y = e.offsetY;
-      document.onmousemove = (e) => {
-        // this.x += e.offsetX - x;
-        // this.y += e.offsetY - y;
+      this.tempX = e.offsetX;
+      this.tempY = e.offsetY;
 
-        // this.setXY(this.x, this.y);
-        this.translate(e.offsetX - x, e.offsetY - y);
+      document.addEventListener('mousemove', vertexMouseMove);
 
-        // if (this.port) {
-        //   let cx = parseInt(this.port.getAttribute('cx'));
-        //   let cy = parseInt(this.port.getAttribute('cy'));
-        //   cx += e.offsetX - x;
-        //   cy += e.offsetY - y;
-        //   this.port.setAttribute('cx', `${cx}`);
-        //   this.port.setAttribute('cy', `${cy}`);
-        // }
-
-        x = e.offsetX;
-        y = e.offsetY;
-
-        // this.graph.resize();
-      };
+      document.addEventListener('mouseup', () => {
+        document.removeEventListener('mousemove', vertexMouseMove);
+        document.body.style.cursor = 'initial';
+      });
     });
   }
 

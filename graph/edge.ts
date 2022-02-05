@@ -55,10 +55,10 @@ export class Edge {
     // this.graph.g.appendChild(this.g);
     this.graph.g.insertBefore(this.g, this.graph.g.firstChild);
 
-    // document.addEventListener('mouseup', () => {
-    //   document.onmousemove = null;
-    //   document.body.style.cursor = 'initial';
-    // });
+    document.addEventListener('mouseup', () => {
+      document.onmousemove = null;
+      document.body.style.cursor = 'initial';
+    });
 
     // 提取纯数字
     let xyArr = d.split(' ').filter((p) => {
@@ -356,6 +356,9 @@ export class Edge {
       document.onmousemove = (e) => {
         let nodes = this.graph.nodes;
         for (let node of nodes) {
+          for (let port of node.ports) {
+            port.show();
+          }
           // let port = node.port;
           for (let port of node.ports) {
             let portX = port.x;
@@ -365,11 +368,11 @@ export class Edge {
               Math.abs(e.offsetY - portY) < 20
             ) {
               // connected
-              this.hideArrowEnd();
+              // this.hideArrowEnd();
               port.hide();
               this.lastLine.source.y = portY;
               this.lastLine.target.y = portY;
-              this.lastLine.target.x = portX;
+              this.lastLine.target.x = portX - 9;
               let newD = '';
               for (let i = 0; i < this.points.length; i++) {
                 let point = this.points[i];
