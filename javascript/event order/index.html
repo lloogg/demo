@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <div id="parent">
+      <p>parent</p>
+      <div id="child"><p>child</p></div>
+    </div>
+    <script>
+      let parent = document.getElementById('parent');
+      let child = document.getElementById('child');
+      // 如果 useCapture = true，点击child，先触发parent，后触发child
+      // 如果 useCapture = false（默认），点击child，先触发child，后触发parent
+      parent.addEventListener(
+        'click',
+        () => {
+          console.log('parent');
+        },
+        true,
+      );
+
+      child.addEventListener('click', () => {
+        console.log('child');
+      });
+    </script>
+  </body>
+</html>
