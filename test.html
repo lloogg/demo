@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const jk = (str) => {
+        try {
+          return JSON.parse(str);
+        } catch (error) {
+          return str;
+        }
+      };
+      function getOpt() {
+        let opt = {
+          a: jk('sdf' || 'grgrg'),
+          b: jk(),
+          c: jk(3),
+          d: jk('4'),
+        };
+        return opt;
+      }
+      let a = getOpt();
+      console.log(a);
+      console.log(a);
+      console.log(a);
+      console.log(a);
+      console.log(a);
+    </script>
+  </body>
+</html>

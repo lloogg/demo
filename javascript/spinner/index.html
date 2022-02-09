@@ -58,28 +58,31 @@
 
         interval = setInterval(() => {
           deg += radix;
-          radix += 0.1;
-          if (deg > 360) {
+          if (deg >= 360) {
             deg -= 360;
           }
           if (radix < 100) {
-            radix += 0.1;
+            radix += 0.01;
           }
 
           div.style.transform = `rotate(${deg}deg)`;
-        }, 10);
+        }, 1);
       }
       function endSpin() {
         clearInterval(interval);
         interval = setInterval(() => {
-          if (radix > 0) {
-            radix -= 0.1;
-          }
-          if (deg < 360) {
-            deg += radix;
-            div.style.transform = `rotate(${deg}deg)`;
-          } else {
+          if (deg < 0.1) {
+            div.style.transform = `rotate(${0}deg)`;
             clearInterval(interval);
+          } else {
+            if (radix > 10) {
+              radix -= 0.01;
+            }
+            deg += radix;
+            if (deg >= 360) {
+              deg -= 360;
+            }
+            div.style.transform = `rotate(${deg}deg)`;
           }
         }, 1);
       }
