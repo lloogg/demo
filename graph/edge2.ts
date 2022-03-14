@@ -10,7 +10,7 @@ interface Line {
   source: Point;
   target: Point;
 }
-class Edge {
+export class Edge {
   d: string = null;
   g: SVGGElement = null;
   handle: SVGPathElement = null;
@@ -48,8 +48,7 @@ class Edge {
     this.path.setAttribute('d', d);
     // 点击无事件
     this.path.style.pointerEvents = 'none';
-    this.path.style.zIndex = '-2';
-    this.handle.style.zIndex = '-2';
+
     this.g.appendChild(this.handle);
     this.g.appendChild(this.path);
     // this.graph.g.appendChild(this.g);
@@ -97,21 +96,18 @@ class Edge {
     this.drawArrowEnd();
 
     const lineMouseMove = (e: MouseEvent) => {
-      if (true) {
+      if (!e.ctrlKey) {
         // if (this.sourceNode || this.targetNode) {
         if (this.chosenLine) {
           if (
-            this.chosenLine.dir === 'left' ||
-            this.chosenLine.dir === 'right'
-          ) {
-            this.chosenLine.source.y = e.offsetY;
-            this.chosenLine.target.y = e.offsetY;
-          } else if (
             this.chosenLine.dir === 'top' ||
             this.chosenLine.dir === 'bottom'
           ) {
             this.chosenLine.source.x = e.offsetX;
             this.chosenLine.target.x = e.offsetX;
+          } else {
+            this.chosenLine.source.y = e.offsetY;
+            this.chosenLine.target.y = e.offsetY;
           }
         }
         let newD = '';
@@ -174,17 +170,8 @@ class Edge {
         let xMax = source.x < target.x ? target.x : source.x;
         let yMin = source.y < target.y ? source.y : target.y;
         let yMax = source.y < target.y ? target.y : source.y;
-        if (line.dir === 'left' || line.dir === 'right') {
-          // 线是水平的，那么 source.y === target.y
-          if (
-            this.tempX < xMax &&
-            this.tempX > xMin &&
-            Math.abs(this.tempY - source.y) < 5
-          ) {
-            this.chosenLine = line;
-            break;
-          }
-        } else if (line.dir === 'top' || line.dir === 'bottom') {
+
+        if (line.dir === 'top' || line.dir === 'bottom') {
           if (
             this.tempY < yMax &&
             this.tempY > yMin &&
@@ -193,6 +180,8 @@ class Edge {
             this.chosenLine = line;
             break;
           }
+        } else {
+          let;
         }
       }
 

@@ -1,5 +1,4 @@
-import { Edge } from './edge';
-import { Graph } from './graph';
+import { Graph } from './graph2';
 import { Node } from './node';
 export * from './edge';
 export * from './node';

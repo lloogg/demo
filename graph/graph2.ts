@@ -84,7 +84,7 @@ export class Graph extends Event {
   addEdge() {
     let edge = new Edge(
       this,
-      'M 10 100 L 15 100 L 15 120 L 135 120 L 135 100 L 140 100',
+      'M 10 100 L 15 100 L 30 85 L 30 120 L 135 120 L 135 100 L 140 100',
     );
     this.edges.push(edge);
   }
