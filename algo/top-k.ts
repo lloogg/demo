@@ -42,7 +42,6 @@ function maxHeapify(arr: number[], n: number, i: number) {
 }
 
 function swap(arr: number[], a: number, b: number) {
-  console.log('swap');
   let temp = arr[a];
   arr[a] = arr[b];
   arr[b] = temp;
@@ -74,18 +73,8 @@ function heapSort(arr: number[], n: number) {
     maxHeapify(arr, i, 0);
   }
 }
-// let arr = [];
-// for (let i = 0; i < 10; i++) {
-//   arr.push(Math.round(Math.random() * 100));
-// }
-let arr = [67, 89, 83, 24, 25, 56, 92, 97, 70, 9];
 
-console.log(arr);
-maxHeapify(arr, arr.length, 0);
-console.log(arr);
-// console.log(heap.values.length);
+let arr = [67, 89, 83, 24, 25, 56, 92, 97, 70, 9];
 // maxHeapify(arr, arr.length, 0);
-// buildMaxHeap(arr, arr.length);
-// console.log(arr);
-// heapSort(arr, arr.length);
-// console.log(arr);
+buildMaxHeap(arr, arr.length);
+console.log(arr);
