@@ -24,5 +24,6 @@ test('should be equal', () => {
     },
   };
   expect(deepClone(target)).toEqual(target);
+  // 没有考虑到数组的情况
   expect(deepClone(target2)).toEqual(target2);
 });
