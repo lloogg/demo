@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>class anonymous</title>
+  </head>
+  <body>
+    <script>
+      class Hello {
+        say() {
+          [1, 2, 3].map((i) => {
+            console.log(this);
+            return i;
+          });
+        }
+
+        static s() {
+          //   console.log(this);
+          [1, 2, 3].map((i) => {
+            console.log(this);
+            return i;
+          });
+        }
+      }
+      Hello.s();
+      let hello = new Hello();
+      hello.say();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>class anonymous</title>
+  </head>
+  <body>
+    <script>
+      class Hello {
+        say() {
+          [1, 2, 3].forEach((i) => {
+            console.log(this);
+          });
+        }
+
+        static s() {
+          console.log(this);
+        }
+      }
+      Hello.s();
+      let hello = new Hello();
+      hello.say();
+    </script>
+  </body>
+</html>
