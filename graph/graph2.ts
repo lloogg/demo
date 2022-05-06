@@ -1,5 +1,5 @@
 import { Node } from '.';
-import { Edge } from './edge2';
+import { Edge } from './edge';
 import { Event } from './event';
 type GraphOption = {
   autoResize: boolean;

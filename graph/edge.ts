@@ -503,3 +503,4 @@ class Edge {
     this.arrowEnd.style.opacity = '0';
   }
 }
+export { Edge };
