@@ -16,5 +16,8 @@
     "watch": "webpack --watch",
     "test": "jest"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "mobx": "^6.5.0"
+  }
 }

@@ -13,6 +13,8 @@ const myDecorator = (
   descriptor: PropertyDescriptor,
 ) => {
   console.log(target);
+  console.log(propertyKey);
+  console.log(descriptor);
 };
 const propertyDecorator = (target: Object, propertyKey: string) => {};
 
