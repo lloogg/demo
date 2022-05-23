@@ -7,10 +7,12 @@ type GraphOption = {
 export class Graph extends Event {
   nodes: Node[] = [];
   edges: Edge[] = [];
+  container: HTMLElement;
   svg: SVGSVGElement;
   g: SVGGElement;
   translateX: number = 0;
   translateY: number = 0;
+  scale = 1;
   /**
    * x for mousedown
    */
@@ -32,6 +34,7 @@ export class Graph extends Event {
     this.svg.appendChild(this.g);
 
     el.appendChild(svg);
+    this.container = el;
     this.svg.addEventListener('mousedown', (e) => {
       for (let node of this.nodes) {
         node.setSelect(false);
@@ -72,6 +75,8 @@ export class Graph extends Event {
     this.svg.addEventListener('mouseup', () => {
       document.removeEventListener('mousemove', gMouseMove);
     });
+
+    el.addEventListener('wheel', this.mouseWheel.bind(this));
   }
 
   addNode(): Node {
@@ -117,6 +122,21 @@ export class Graph extends Event {
           this.svg.setAttribute('height', `${point.y}`);
         }
       }
+    }
+  }
+
+  mouseWheel(e: WheelEvent) {
+    const zoomFactor = 0.01;
+    if (e.deltaY > 0) {
+      this.scale += zoomFactor;
+    } else {
+      this.scale -= zoomFactor;
+    }
+
+    if (this.scale > 0.1) {
+      this.svg.style.transform = `scale(${this.scale}) translate(${
+        e.offsetX * this.scale
+      }px, ${e.offsetY * this.scale}px)`;
     }
   }
 }

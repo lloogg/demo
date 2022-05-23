@@ -57,7 +57,7 @@ class Edge {
 
     document.addEventListener('mouseup', () => {
       document.onmousemove = null;
-      document.body.style.cursor = 'initial';
+      // document.body.style.cursor = 'initial';
     });
 
     // 提取纯数字
@@ -97,7 +97,7 @@ class Edge {
     this.drawArrowEnd();
 
     const lineMouseMove = (e: MouseEvent) => {
-      if (true) {
+      if (!e.shiftKey) {
         // if (this.sourceNode || this.targetNode) {
         if (this.chosenLine) {
           if (
@@ -311,27 +311,44 @@ class Edge {
       'path',
     ) as SVGPathElement;
 
-    const arrowStartMove = (e) => {
-      this.firstLine.source.y = e.offsetY;
-      this.firstLine.target.y = e.offsetY;
-      this.firstLine.source.x = e.offsetX;
-      let newD = '';
-      for (let i = 0; i < this.points.length; i++) {
-        let point = this.points[i];
-        if (i === 0) {
-          newD += `M ${point.x} ${point.y}`;
-        } else {
-          newD += ` L ${point.x} ${point.y}`;
+    const arrowStartMove = (e: MouseEvent) => {
+      // this.firstLine.source.y = e.offsetY;
+      // this.firstLine.target.y = e.offsetY;
+      // this.firstLine.source.x = e.offsetX;
+
+      const nodes = this.graph.nodes;
+      for (let node of nodes) {
+        for (let port of node.ports) {
+          port.show();
+          let portX = port.x;
+          let portY = port.y;
+          // 一定距离内自动吸附
+          if (
+            Math.abs(e.offsetX - portX) < 20 &&
+            Math.abs(e.offsetY - portY) < 20
+          ) {
+            // connected
+            // this.hideArrowEnd();
+            port.hide();
+            this.firstLine.source.y = portY;
+            this.firstLine.target.y = portY;
+            this.firstLine.source.x = portX - 9;
+
+            this.update();
+            break;
+          } else {
+            this.firstLine.source.y = e.offsetY;
+            this.firstLine.target.y = e.offsetY;
+            this.firstLine.source.x = e.offsetX;
+            this.update();
+            this.graph.resize(
+              this.firstLine.source.x,
+              this.firstLine.source.y + 4,
+            );
+          }
         }
       }
-      this.d = newD;
-      this.path.setAttribute('d', newD);
-      this.handle.setAttribute('d', newD);
-
-      this.drawArrowStart();
-      this.changeArrowDirection();
-
-      document.body.style.cursor = 'grab';
+      this.update();
     };
 
     this.arrowStart.addEventListener('mousedown', (e) => {
@@ -351,74 +368,58 @@ class Edge {
     this.arrowEnd.setAttribute('cursor', 'grab');
     this.g.appendChild(this.arrowEnd);
 
-    this.arrowEnd.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
-      document.onmousemove = (e) => {
-        let nodes = this.graph.nodes;
-        for (let node of nodes) {
-          for (let port of node.ports) {
-            port.show();
-          }
-          // let port = node.port;
-          for (let port of node.ports) {
-            let portX = port.x;
-            let portY = port.y;
-            if (
-              Math.abs(e.offsetX - portX) < 20 &&
-              Math.abs(e.offsetY - portY) < 20
-            ) {
-              // connected
-              // this.hideArrowEnd();
-              port.hide();
-              this.lastLine.source.y = portY;
-              this.lastLine.target.y = portY;
-              this.lastLine.target.x = portX - 9;
-              let newD = '';
-              for (let i = 0; i < this.points.length; i++) {
-                let point = this.points[i];
-                if (i === 0) {
-                  newD += `M ${point.x} ${point.y}`;
-                } else {
-                  newD += ` L ${point.x} ${point.y}`;
-                }
-              }
-              this.d = newD;
-              this.path.setAttribute('d', newD);
-              this.handle.setAttribute('d', newD);
-              this.drawArrowEnd();
-              this.changeArrowDirection();
-              document.body.style.cursor = 'grab';
-              break;
-            } else {
-              this.lastLine.source.y = e.offsetY;
-              this.lastLine.target.y = e.offsetY;
-              this.lastLine.target.x = e.offsetX;
-              let newD = '';
-              for (let i = 0; i < this.points.length; i++) {
-                let point = this.points[i];
-                if (i === 0) {
-                  newD += `M ${point.x} ${point.y}`;
-                } else {
-                  newD += ` L ${point.x} ${point.y}`;
-                }
-              }
-              this.d = newD;
-              this.path.setAttribute('d', newD);
-              this.handle.setAttribute('d', newD);
-              this.drawArrowEnd();
-              this.changeArrowDirection();
-              document.body.style.cursor = 'grab';
-              this.graph.resize(
-                this.lastLine.target.x,
-                this.lastLine.target.y + 4,
-              );
-            }
+    const arrowEndMove = (e: MouseEvent) => {
+      let nodes = this.graph.nodes;
+      for (let node of nodes) {
+        for (let port of node.ports) {
+          // 显示端口
+          port.show();
+
+          let portX = port.x;
+          let portY = port.y;
+          // 一定距离内自动吸附
+          if (
+            Math.abs(e.offsetX - portX) < 20 &&
+            Math.abs(e.offsetY - portY) < 20
+          ) {
+            // connected
+            // this.hideArrowEnd();
+            port.hide();
+            this.lastLine.source.y = portY;
+            this.lastLine.target.y = portY;
+            this.lastLine.target.x = portX - 9;
+
+            this.update();
+            break;
+          } else {
+            // 更新最后一条线的 x 和 y
+            this.lastLine.source.y = e.offsetY;
+            this.lastLine.target.y = e.offsetY;
+            this.lastLine.target.x = e.offsetX;
+            this.update();
+            this.graph.resize(
+              this.lastLine.target.x,
+              this.lastLine.target.y + 4,
+            );
           }
         }
-      };
+      }
+    };
+
+    this.arrowEnd.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      document.addEventListener('mousemove', arrowEndMove);
+    });
+
+    document.addEventListener('mouseup', () => {
+      document.removeEventListener('mousemove', arrowEndMove);
+      document.body.style.cursor = 'initial';
     });
   }
 
+  /**
+   * 更新 source 箭头
+   */
   drawArrowStart() {
     if (this.firstLine.dir === 'right') {
       let d = '';
@@ -437,6 +438,9 @@ class Edge {
     }
   }
 
+  /**
+   * 更新 target 箭头
+   */
   drawArrowEnd() {
     if (this.lastLine.dir === 'right') {
       let d = '';
@@ -455,8 +459,10 @@ class Edge {
     }
   }
 
+  /**
+   * 更新连线两端箭头方向
+   */
   changeArrowDirection() {
-    // 如果最后一条线的方向变了，改变 arrowEnd 的 path
     if (this.firstLine.dir !== this.getLineDir(this.firstLine)) {
       this.firstLine.dir = this.getLineDir(this.firstLine);
       this.drawArrowStart();
@@ -482,6 +488,10 @@ class Edge {
       point.x = point.x + x;
       point.y = point.y + y;
     }
+    this.update();
+  }
+
+  update(): string {
     let newD = '';
     for (let i = 0; i < this.points.length; i++) {
       let point = this.points[i];
@@ -491,16 +501,16 @@ class Edge {
         newD += ` L ${point.x} ${point.y}`;
       }
     }
-
     this.d = newD;
-    this.path.setAttribute('d', newD);
-    this.handle.setAttribute('d', newD);
-    this.drawArrowEnd();
+    this.path.setAttribute('d', this.d);
+    this.handle.setAttribute('d', this.d);
     this.drawArrowStart();
+    this.drawArrowEnd();
+    this.changeArrowDirection();
+    document.body.style.cursor = 'grab';
+    return newD;
   }
 
-  hideArrowEnd() {
-    this.arrowEnd.style.opacity = '0';
-  }
+  documentMouseMove(e: MouseEvent) {}
 }
 export { Edge };

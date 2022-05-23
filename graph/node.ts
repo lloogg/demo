@@ -98,26 +98,17 @@ export class Node {
   translate(x: number, y: number) {
     this.x += x;
     this.y += y;
-    this.vertex.setAttribute('x', `${this.x}`);
-    this.bg.setAttribute('x', `${this.x}`);
-    this.vertex.setAttribute('y', `${this.y}`);
-    this.bg.setAttribute('y', `${this.y}`);
+    this.update();
     for (let port of this.ports) {
       port.translate(x, y);
     }
   }
 
-  setXY(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  update() {
     this.vertex.setAttribute('x', `${this.x}`);
     this.bg.setAttribute('x', `${this.x}`);
     this.vertex.setAttribute('y', `${this.y}`);
     this.bg.setAttribute('y', `${this.y}`);
-
-    // for (let port of this.ports) {
-    //   port.translate(diffX, diffY);
-    // }
   }
 }
 
