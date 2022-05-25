@@ -2,7 +2,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
 
-  entry: path.resolve(__dirname, './graph/index'),
+  entry: path.resolve(__dirname, './javascript/circular dependency/index'),
   devtool: 'inline-source-map',
   module: {
     rules: [
