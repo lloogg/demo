@@ -1,6 +1,6 @@
 import { deepClone } from './deep-clone3';
 
-test('should be equal', () => {
+testPath('should be equal', () => {
   const target: any = {
     field1: 1,
     field2: undefined,
