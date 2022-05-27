@@ -110,6 +110,10 @@ export class Node {
     this.vertex.setAttribute('y', `${this.y}`);
     this.bg.setAttribute('y', `${this.y}`);
   }
+
+  updatePixelMap() {
+    for (let i = this.x; i < this.width; i++) {}
+  }
 }
 
 export namespace Node {}
