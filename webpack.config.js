@@ -2,7 +2,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
 
-  entry: path.resolve(__dirname, './path-finding/astar'),
+  entry: path.resolve(__dirname, './path-finding/astar2'),
   // entry: path.resolve(__dirname, './graph/index'),
   devtool: 'inline-source-map',
   module: {
