@@ -3,12 +3,6 @@
 // openSet: nodes need to be evaluated
 import { createCanvas } from './canvas';
 
-class ObstacleMap {
-  map;
-  constructor() {
-    this.map = {};
-  }
-}
 class Rectangle {
   x;
   y;
@@ -56,6 +50,7 @@ class Point {
     this.cameFrom = undefined;
   }
 }
+
 type Direction =
   | 'left'
   | 'top'
@@ -72,15 +67,6 @@ function getLowestFPointInOpenSet(openSet: Point[]) {
   return openSet.reduce((memo, current) => {
     return current.f < memo.f ? current : memo;
   });
-  // let min = Number.MAX_VALUE;
-  // let res;
-  // for (let point of openSet) {
-  //   if (point.f < min) {
-  //     res = point;
-  //   }
-  // }
-  // console.log(res);
-  // return res;
 }
 
 let width = 1000;
@@ -265,14 +251,6 @@ function main() {
     ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
   }
 
-  // pathFind(source, target, points);
-  // console.timeEnd('a');
-  // let paths = [];
-  // for (let i = target; i != source; i = i.cameFrom) {
-  //   ctx.fillRect(i.x, i.y, 1, 1);
-  // }
-
-  //
   canvas.addEventListener('mousemove', (e) => {
     clearInterval(interval);
 
@@ -285,16 +263,7 @@ function main() {
     const source = new Point(1, 2);
     const target = new Point(e.offsetX, e.offsetY);
 
-    let tar = astar(source, target, width, height);
-    let paths = [];
-    // for (let i = tar; i != source; i = i.cameFrom) {
-    //   ctx.fillStyle = 'blue';
-    //   ctx.fillRect(i.x, i.y, 1, 1);
-    // }
+    astar(source, target, width, height);
   });
-
-  // const source = new Point(1, 2);
-  // const target = new Point(500, 500);
-  // let tar = astar(source, target, width, height);
 }
 main();
