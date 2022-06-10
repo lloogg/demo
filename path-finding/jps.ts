@@ -61,9 +61,9 @@ type Direction =
   | 'bottomLeft'
   | 'bottomRight';
 function heuristic(a: Point, b: Point) {
-  // return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
   // return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-  return Math.hypot(a.x - b.x, a.y - b.y);
+  // return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
 function getLowestFPointInOpenSet(openSet: Point[]) {
@@ -72,13 +72,23 @@ function getLowestFPointInOpenSet(openSet: Point[]) {
   });
 }
 
-let width = 100;
-let height = 100;
+function getDirection(current: Point, cameFrom: Point): Direction {
+  if (current.x === cameFrom.x) {
+    return current.y - cameFrom.y > 0 ? 'bottom' : 'top';
+  }
+
+  if (current.y === cameFrom.y) {
+    return current.x - cameFrom.x > 0 ? 'right' : 'left';
+  }
+}
+
+let width = 1000;
+let height = 1000;
 let canvas = createCanvas(width, height);
 let ctx = canvas.getContext('2d');
 let rectangles: Rectangle[] = [];
 let interval;
-function astar(source: Point, target: Point, width, height) {
+function jps(source: Point, target: Point, width, height) {
   const pointMap = new Map<string, Point>();
 
   function getNeighbors(point: Point) {
@@ -129,50 +139,6 @@ function astar(source: Point, target: Point, width, height) {
       neighbors.bottom = bottom;
     }
 
-    // // top left
-
-    // if (x > 0 && y > 0) {
-    //   let key = `${x - 1} ${y - 1}`;
-    //   let topLeft = pointMap.get(key);
-    //   if (topLeft === undefined) {
-    //     topLeft = new Point(x - 1, y - 1);
-    //     pointMap.set(key, topLeft);
-    //   }
-    //   neighbors.topLeft = topLeft;
-    // }
-
-    // // top right
-    // if (x < width - 1 && y > 0) {
-    //   let key = `${x + 1} ${y - 1}`;
-    //   let topRight = pointMap.get(key);
-    //   if (topRight === undefined) {
-    //     topRight = new Point(x + 1, y - 1);
-    //     pointMap.set(key, topRight);
-    //   }
-    //   neighbors.topRight = topRight;
-    // }
-    // // bottom left
-    // if (x > 0 && y < height - 1) {
-    //   let key = `${x - 1} ${y + 1}`;
-    //   let bottomLeft = pointMap.get(key);
-    //   if (bottomLeft === undefined) {
-    //     bottomLeft = new Point(x - 1, y + 1);
-    //     pointMap.set(key, bottomLeft);
-    //   }
-    //   neighbors.bottomLeft = bottomLeft;
-    // }
-    // // bottom right
-
-    // if (x < width - 1 && y < height - 1) {
-    //   let key = `${x + 1} ${y + 1}`;
-    //   let bottomRight = pointMap.get(key);
-    //   if (bottomRight === undefined) {
-    //     bottomRight = new Point(x + 1, y + 1);
-    //     pointMap.set(key, bottomRight);
-    //   }
-    //   neighbors.bottomRight = bottomRight;
-    // }
-
     for (let key in neighbors) {
       let neighbor = neighbors[key] as Point;
       for (let rectangle of rectangles) {
@@ -193,9 +159,14 @@ function astar(source: Point, target: Point, width, height) {
   // pointMap.set(`${source.x} ${source.y}`, source);
 
   // while (openSet.length !== 0) {
+  let previousDirection;
   interval = setInterval(() => {
     if (openSet.length !== 0) {
       let current = getLowestFPointInOpenSet(openSet);
+
+      if (current !== source && !previousDirection) {
+        previousDirection = getDirection(current, current.cameFrom);
+      }
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = 'red';
       for (let rect of rectangles) {
@@ -232,16 +203,17 @@ function astar(source: Point, target: Point, width, height) {
       // let current = queue.shift();
       let neighbors = getNeighbors(current);
       for (let key in neighbors) {
-        let next: Point = neighbors[key];
-        let tempG = current.g + 1 + Math.random();
-        if (tempG < next.g || !openSet.includes(next)) {
-          next.cameFrom = current;
-          next.g = tempG;
-          next.h = heuristic(next, target);
-          next.f = next.g + 100 * next.h;
-          if (!openSet.includes(next)) {
-            openSet.push(next);
-          }
+        let neighbor: Point = neighbors[key];
+        let tempG = current.g + 1;
+        if (getDirection(neighbor, current) === previousDirection) {
+          tempG = current.g;
+        }
+        if (tempG < neighbor.g || !openSet.includes(neighbor)) {
+          neighbor.cameFrom = current;
+          neighbor.g = tempG;
+          neighbor.h = heuristic(neighbor, target);
+          neighbor.f = neighbor.g + 100 * neighbor.h;
+          openSet.push(neighbor);
         }
       }
     } else {
@@ -273,7 +245,7 @@ function main() {
     const source = new Point(1, 2);
     const target = new Point(e.offsetX, e.offsetY);
 
-    astar(source, target, width, height);
+    jps(source, target, width, height);
   });
 }
 main();

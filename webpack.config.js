@@ -2,8 +2,15 @@ const path = require('path');
 module.exports = {
   mode: 'development',
 
-  entry: path.resolve(__dirname, './path-finding/astar2'),
+  entry: {
+    astar: path.resolve(__dirname, './path-finding/astar2'),
+    jps: path.resolve(__dirname, './path-finding/jps'),
+    test: path.resolve(__dirname, './path-finding/test'),
+    test2: path.resolve(__dirname, './path-finding/test2'),
+    hightower: path.resolve(__dirname, './routing/hightower'),
+  },
   // entry: path.resolve(__dirname, './graph/index'),
+
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -17,6 +24,6 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
   },
   output: {
-    filename: 'index.js',
+    filename: '[name].js',
   },
 };
