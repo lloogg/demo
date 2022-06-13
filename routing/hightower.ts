@@ -1,6 +1,3 @@
-// f(n) = g(n) + h(n)
-// closedSet: nodes that alreay been evaluated
-// openSet: nodes need to be evaluated
 import { createSvg } from './util';
 import { Point } from '../graph/point';
 
@@ -552,15 +549,15 @@ class Rectangle {
   }
 }
 
-let width = 1000;
-let height = 1000;
+let width = 3000;
+let height = 3000;
 let svg = createSvg(width, height);
 let rectangles: Rectangle[] = [];
 
 type FourDirection = {
   [key in Dir]?: Rectangle;
 };
-
+let pointTraceMap = new Map();
 function main() {
   rectangles.push(new Rectangle(30, 30, 150, 350));
   rectangles.push(new Rectangle(230, 30, 150, 200));
@@ -585,7 +582,7 @@ function main() {
     rectangle.setAttribute('height', `${rect.height}`);
     svg.appendChild(rectangle);
   }
-  let edge: Edge;
+
   svg.addEventListener('click', (e) => {
     // const source = new Point(
     //   Math.floor(Math.random() * width),
@@ -594,17 +591,17 @@ function main() {
     const source = new Point(100, 2);
     const target = new Point(e.offsetX, e.offsetY);
     // const target = new Point(878, 451);
-    let slines: Line[] = [];
+    let slines: Set<string> = new Set();
 
-    let tlines: Line[] = [];
+    let tlines: Set<string> = new Set();
     // let points:Point[] = [source, target];
-    let smap = new Map<Point, FourDirection>();
-    let tmap = new Map<Point, FourDirection>();
-    smap.set(source, null);
-    tmap.set(target, null);
+    let smap = new Map<string, FourDirection>();
+    let tmap = new Map<string, FourDirection>();
+    smap.set(source.toString(), null);
+    tmap.set(target.toString(), null);
 
     let ok = false;
-    let loop = 30;
+    let loop = 10;
     const temp = loop;
     while (!ok && loop > 0) {
       loop -= 1;
@@ -613,10 +610,32 @@ function main() {
       //   tlines = [];
       getLines(smap, slines, null);
       getLines(tmap, tlines, null);
-      for (let sline of slines) {
-        for (let tline of tlines) {
+      for (let slineString of slines) {
+        let [sStartX, sStartY, sEndX, sEndY] = slineString
+          .split(' ')
+          .map((item) => {
+            return parseInt(item);
+          });
+        let sline = new Line(
+          null,
+          new Point(sStartX, sStartY),
+          new Point(sEndX, sEndY),
+        );
+        for (let tlineString of tlines) {
+          let [tStartX, tStartY, tEndX, tEndY] = tlineString
+            .split(' ')
+            .map((item) => {
+              return parseInt(item);
+            });
+          let tline = new Line(
+            null,
+            new Point(tStartX, tStartY),
+            new Point(tEndX, tEndY),
+          );
+
           if (sline.intersectsWithLine(tline)) {
             console.log(true, temp - loop);
+            console.log(sline.intersectsWithLine(tline).toString());
             ok = true;
             //   let sPath = document.createElementNS(
             //     'http://www.w3.org/2000/svg',
@@ -640,6 +659,100 @@ function main() {
             //   tPath.setAttribute('stroke-width', '1');
             //   svg.appendChild(sPath);
             //   svg.appendChild(tPath);
+            // debugger;
+            console.log(sline, tline);
+
+            {
+              let [startX, startY, endX, endY] = slineString.split(' ');
+              let sPath = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path',
+              );
+
+              sPath.setAttribute(
+                'd',
+                `M ${startX} ${startY} L ${endX} ${endY}`,
+              );
+
+              sPath.setAttribute('stroke', 'blue');
+              sPath.setAttribute('stroke-width', '3');
+
+              svg.appendChild(sPath);
+            }
+
+            {
+              let [startX, startY, endX, endY] = tlineString.split(' ');
+              let sPath = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path',
+              );
+
+              sPath.setAttribute(
+                'd',
+                `M ${startX} ${startY} L ${endX} ${endY}`,
+              );
+
+              sPath.setAttribute('stroke', 'green');
+              sPath.setAttribute('stroke-width', '3');
+
+              svg.appendChild(sPath);
+            }
+
+            let p1 = sline.start.toString();
+            let p1temp;
+            let p2 = tline.start.toString();
+            let p2temp;
+            console.log(p1);
+            while (pointTraceMap.get(p1)) {
+              p1temp = p1;
+              let point1Temp = JSON.parse(p1temp);
+              p1 = pointTraceMap.get(p1);
+              let point1 = JSON.parse(p1);
+              console.log(p1);
+              {
+                let sPath = document.createElementNS(
+                  'http://www.w3.org/2000/svg',
+                  'path',
+                );
+
+                sPath.setAttribute(
+                  'd',
+                  `M ${point1Temp.x} ${point1Temp.y} L ${point1.x} ${point1.y}`,
+                );
+
+                sPath.setAttribute('stroke', 'blue');
+                sPath.setAttribute('stroke-width', '3');
+
+                svg.appendChild(sPath);
+              }
+            }
+            console.log(';;;;');
+            console.log(p2);
+            while (pointTraceMap.get(p2)) {
+              p2temp = p2;
+              let point2Temp = JSON.parse(p2temp) as Point;
+              p2 = pointTraceMap.get(p2);
+              let point2 = JSON.parse(p2) as Point;
+              console.log(p2);
+              {
+                let sPath = document.createElementNS(
+                  'http://www.w3.org/2000/svg',
+                  'path',
+                );
+
+                sPath.setAttribute(
+                  'd',
+                  `M ${point2Temp.x} ${point2Temp.y} L ${point2.x} ${point2.y}`,
+                );
+
+                sPath.setAttribute('stroke', 'green');
+                sPath.setAttribute('stroke-width', '3');
+
+                svg.appendChild(sPath);
+              }
+            }
+
+            return;
           }
         }
       }
@@ -647,13 +760,15 @@ function main() {
   });
 }
 
-function getLines(map: Map<Point, FourDirection>, lines: Line[], points) {
-  let newLines = [];
-  let tempMap = new Map<Point, FourDirection>(map);
+function getLines(map: Map<string, FourDirection>, lines: Set<string>, points) {
+  // let newLines = [];
+  let newLines = new Set<string>();
+  let tempMap = new Map<string, FourDirection>(map);
   map.clear();
-  for (let point of Array.from(tempMap.keys())) {
-    if (tempMap.get(point) == null) {
-      tempMap.set(point, {});
+  for (let pointJson of Array.from(tempMap.keys())) {
+    let point = JSON.parse(pointJson) as Point;
+    if (tempMap.get(pointJson) == null) {
+      tempMap.set(pointJson, {});
     }
     for (let rectangle of rectangles) {
       // top
@@ -662,13 +777,13 @@ function getLines(map: Map<Point, FourDirection>, lines: Line[], points) {
         rectangle.x + rectangle.width > point.x &&
         point.y > rectangle.y + rectangle.height
       ) {
-        if (!tempMap.get(point).top) {
-          tempMap.get(point).top = rectangle;
+        if (!tempMap.get(pointJson).top) {
+          tempMap.get(pointJson).top = rectangle;
         } else if (
-          tempMap.get(point).top.y + tempMap.get(point).top.height <
+          tempMap.get(pointJson).top.y + tempMap.get(pointJson).top.height <
           rectangle.y + rectangle.height
         ) {
-          tempMap.get(point).top = rectangle;
+          tempMap.get(pointJson).top = rectangle;
         }
       }
       // left
@@ -677,13 +792,13 @@ function getLines(map: Map<Point, FourDirection>, lines: Line[], points) {
         rectangle.y + rectangle.height > point.y &&
         rectangle.x + rectangle.width < point.x
       ) {
-        if (!tempMap.get(point).left) {
-          tempMap.get(point).left = rectangle;
+        if (!tempMap.get(pointJson).left) {
+          tempMap.get(pointJson).left = rectangle;
         } else if (
-          tempMap.get(point).left.x + tempMap.get(point).left.width <
+          tempMap.get(pointJson).left.x + tempMap.get(pointJson).left.width <
           rectangle.x + rectangle.width
         ) {
-          tempMap.get(point).left = rectangle;
+          tempMap.get(pointJson).left = rectangle;
         }
       }
       // bottom
@@ -692,10 +807,10 @@ function getLines(map: Map<Point, FourDirection>, lines: Line[], points) {
         rectangle.x + rectangle.width > point.x &&
         point.y < rectangle.y
       ) {
-        if (!tempMap.get(point).bottom) {
-          tempMap.get(point).bottom = rectangle;
-        } else if (tempMap.get(point).bottom.y > rectangle.y) {
-          tempMap.get(point).bottom = rectangle;
+        if (!tempMap.get(pointJson).bottom) {
+          tempMap.get(pointJson).bottom = rectangle;
+        } else if (tempMap.get(pointJson).bottom.y > rectangle.y) {
+          tempMap.get(pointJson).bottom = rectangle;
         }
       }
       // right
@@ -704,113 +819,277 @@ function getLines(map: Map<Point, FourDirection>, lines: Line[], points) {
         rectangle.y + rectangle.height > point.y &&
         rectangle.x > point.x
       ) {
-        if (!tempMap.get(point).right) {
-          tempMap.get(point).right = rectangle;
-        } else if (tempMap.get(point).right.x > rectangle.x) {
-          tempMap.get(point).right = rectangle;
+        if (!tempMap.get(pointJson).right) {
+          tempMap.get(pointJson).right = rectangle;
+        } else if (tempMap.get(pointJson).right.x > rectangle.x) {
+          tempMap.get(pointJson).right = rectangle;
         }
       }
     }
 
-    let { left, right, top, bottom } = tempMap.get(point);
+    let { left, right, top, bottom } = tempMap.get(pointJson);
     // left
     if (left) {
       if (left.x + left.width + 1 !== point.x) {
         const escapePoint = new Point(left.x + left.width + 1, point.y);
-        newLines.push(new Line('left', point, escapePoint));
-        map.set(escapePoint, null);
+
+        if (
+          !lines.has(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          ) &&
+          !lines.has(`${escapePoint.x} ${escapePoint.y} ${point.x} ${point.y}`)
+        ) {
+          newLines.add(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          );
+        }
+
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     } else {
-      newLines.push(new Line('left', point, new Point(1, point.y)));
+      const escapePoint = new Point(1, point.y);
+      if (
+        !lines.has(`${point.x} ${point.y} ${1} ${point.y}`) &&
+        !lines.has(`${1} ${point.y} ${point.x} ${point.y}`)
+      ) {
+        newLines.add(`${point.x} ${point.y} ${1} ${point.y}`);
+      }
     }
 
     // right
     if (right) {
       if (right.x - 1 !== point.x) {
         const escapePoint = new Point(right.x - 1, point.y);
-        newLines.push(new Line('right', point, escapePoint));
-        map.set(escapePoint, null);
+
+        if (
+          !lines.has(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          ) &&
+          !lines.has(`${escapePoint.x} ${escapePoint.y} ${point.x} ${point.y}`)
+        ) {
+          newLines.add(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          );
+        }
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     } else {
-      newLines.push(new Line('right', point, new Point(width - 1, point.y)));
+      const escapePoint = new Point(width - 1, point.y);
+      if (
+        !lines.has(`${point.x} ${point.y} ${width - 1} ${point.y}`) &&
+        !lines.has(`${width - 1} ${point.y} ${point.x} ${point.y}`)
+      ) {
+        newLines.add(`${point.x} ${point.y} ${width - 1} ${point.y}`);
+      }
     }
 
     // top
     if (top) {
       if (top.y + top.height + 1 !== point.y) {
         const escapePoint = new Point(point.x, top.y + top.height + 1);
-        newLines.push(new Line('top', point, escapePoint));
-        map.set(escapePoint, null);
+
+        if (
+          !lines.has(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          ) &&
+          !lines.has(`${escapePoint.x} ${escapePoint.y} ${point.x} ${point.y}`)
+        ) {
+          newLines.add(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          );
+        }
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     } else {
-      newLines.push(new Line('top', point, new Point(point.x, 1)));
+      const escapePoint = new Point(point.x, 1);
+      if (
+        !lines.has(`${point.x} ${point.y} ${point.x} ${1}`) &&
+        !lines.has(`${point.x} ${1} ${point.x} ${point.y}`)
+      ) {
+        newLines.add(`${point.x} ${point.y} ${point.x} ${1}`);
+      }
     }
 
     // bottom
     if (bottom) {
       if (bottom.y - 1 !== point.y) {
         const escapePoint = new Point(point.x, bottom.y - 1);
-        newLines.push(new Line('bottom', point, escapePoint));
-        map.set(escapePoint, null);
+
+        if (
+          !lines.has(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          ) &&
+          !lines.has(`${escapePoint.x} ${escapePoint.y} ${point.x} ${point.y}`)
+        ) {
+          newLines.add(
+            `${point.x} ${point.y} ${escapePoint.x} ${escapePoint.y}`,
+          );
+        }
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     } else {
-      newLines.push(new Line('bottom', point, new Point(point.x, height - 1)));
+      const escapePoint = new Point(point.x, height - 1);
+      if (
+        !lines.has(`${point.x} ${point.y} ${point.x} ${height - 1}`) &&
+        !lines.has(`${point.x} ${height - 1} ${point.x} ${point.y}`)
+      ) {
+        newLines.add(`${point.x} ${point.y} ${point.x} ${height - 1}`);
+      }
     }
 
     if (left && left.x + left.width + 1 === point.x) {
       if (!top || top.y + top.height < left.y - 1) {
-        map.set(new Point(point.x, left.y - 1), null);
+        const escapePoint = new Point(point.x, left.y - 1);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
       if (!bottom || bottom.y > left.y + left.height + 1) {
-        map.set(new Point(point.x, left.y + left.height + 1), null);
+        const escapePoint = new Point(point.x, left.y + left.height + 1);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     }
     if (right && right.x - 1 === point.x) {
       if (!top || top.y + top.height < right.y - 1) {
-        console.log('right top set');
-        map.set(new Point(point.x, right.y - 1), null);
+        const escapePoint = new Point(point.x, right.y - 1);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
       if (!bottom || bottom.y > right.y + right.height + 1) {
-        console.log('right bottom set');
-        // console.log(right.y + right.height + 1);
-        map.set(new Point(point.x, right.y + right.height + 1), null);
+        const escapePoint = new Point(point.x, right.y + right.height + 1);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     }
     if (bottom && bottom.y - 1 === point.y) {
       if (!right || right.x > bottom.x + bottom.width + 1) {
-        map.set(new Point(bottom.x + bottom.width + 1, point.y), null);
+        const escapePoint = new Point(bottom.x + bottom.width + 1, point.y);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
       if (!left || left.x + left.width + 1 < bottom.x) {
-        map.set(new Point(bottom.x - 1, point.y), null);
+        const escapePoint = new Point(bottom.x - 1, point.y);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     }
     if (top && top.y + top.height + 1 === point.y) {
       if (!right || right.x > top.x + top.width + 1) {
-        map.set(new Point(top.x + top.width + 1, point.y), null);
+        const escapePoint = new Point(top.x + top.width + 1, point.y);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
       if (!left || left.x + left.width + 1 < top.x) {
-        map.set(new Point(top.x - 1, point.y), null);
+        const escapePoint = new Point(top.x - 1, point.y);
+        if (!map.has(escapePoint.toString())) {
+          map.set(escapePoint.toString(), null);
+        }
+        //
+        if (!pointTraceMap.has(escapePoint.toString())) {
+          // pointTraceMap.set(escapePoint.toString(), pointJson);
+          // } else {
+          pointTraceMap.set(escapePoint.toString(), pointJson);
+        }
       }
     }
 
-    // for (let line of newLines) {
-    //   let sPath = document.createElementNS(
-    //     'http://www.w3.org/2000/svg',
-    //     'path',
-    //   );
+    for (let lineString of newLines) {
+      let [startX, startY, endX, endY] = lineString.split(' ');
+      let sPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+      );
 
-    //   sPath.setAttribute(
-    //     'd',
-    //     `M ${line.start.x} ${line.start.y} L ${line.end.x} ${line.end.y}`,
-    //   );
-    //   var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    //   sPath.setAttribute('stroke', 'black');
-    //   //   sPath.setAttribute('stroke', '#' + randomColor);
-    //   sPath.setAttribute('stroke-width', '1');
+      sPath.setAttribute('d', `M ${startX} ${startY} L ${endX} ${endY}`);
+      var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      sPath.setAttribute('stroke', 'black');
+      // sPath.setAttribute('stroke', '#' + randomColor);
+      sPath.setAttribute('stroke-width', '1');
 
-    //   svg.appendChild(sPath);
-    // }
+      svg.appendChild(sPath);
+    }
   }
-  lines.push(...newLines);
+  // lines.push(...newLines);
+  // lines.add(...newLines);
+  newLines.forEach((item) => {
+    lines.add(item);
+  });
 }
 main();
