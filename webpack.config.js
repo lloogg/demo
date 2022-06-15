@@ -8,6 +8,7 @@ module.exports = {
     test: path.resolve(__dirname, './path-finding/test'),
     test2: path.resolve(__dirname, './path-finding/test2'),
     hightower: path.resolve(__dirname, './routing/hightower'),
+    hightower2: path.resolve(__dirname, './routing/hightower2'),
   },
   // entry: path.resolve(__dirname, './graph/index'),
 
