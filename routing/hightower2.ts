@@ -640,18 +640,18 @@ type Neighbor = {
   bottom?: string;
 };
 function main() {
-  rectangles.push(new Rectangle(30, 30, 150, 350));
-  rectangles.push(new Rectangle(230, 30, 150, 200));
-  rectangles.push(new Rectangle(200, 30, 10, 300));
-  rectangles.push(new Rectangle(20, 430, 880, 20));
-  rectangles.push(new Rectangle(20, 450, 20, 200));
-  rectangles.push(new Rectangle(880, 450, 20, 200));
-  rectangles.push(new Rectangle(40, 650, 400, 20));
-  rectangles.push(new Rectangle(430, 480, 20, 180));
-  rectangles.push(new Rectangle(40, 550, 200, 20));
-  rectangles.push(new Rectangle(60, 450, 20, 200));
+  // rectangles.push(new Rectangle(30, 30, 150, 350));
+  // rectangles.push(new Rectangle(230, 30, 150, 200));
+  // rectangles.push(new Rectangle(200, 30, 10, 300));
+  // rectangles.push(new Rectangle(20, 430, 880, 20));
+  // rectangles.push(new Rectangle(20, 450, 20, 200));
+  // rectangles.push(new Rectangle(880, 450, 20, 200));
+  // rectangles.push(new Rectangle(40, 650, 400, 20));
+  // rectangles.push(new Rectangle(430, 480, 20, 180));
+  // rectangles.push(new Rectangle(40, 550, 200, 20));
+  // rectangles.push(new Rectangle(60, 450, 20, 200));
 
-  for (let i = 0; i < 450; i++) {
+  for (let i = 0; i < 50; i++) {
     rectangles.push(
       new Rectangle(
         Math.floor(Math.random() * 1000),
@@ -678,100 +678,100 @@ function main() {
     return item.moveAndExpand(5);
   });
 
-  svg.addEventListener('click', (e) => {
-    // source = new Point(e.offsetX, e.offsetY);
-    let pointSet = new Set<string>();
-    let lineMap = new Map();
-    // let neighborMap = new Map<string, Neighbor>();
-    const source = new Point(
-      Math.floor(Math.random() * 1000),
-      Math.floor(Math.random() * 1000),
-    );
-    const target = new Point(e.offsetX, e.offsetY);
-    // const source = new Point(340, 224);
-    // const target = new Point(582, 615);
+  // svg.addEventListener('click', (e) => {
+  //   // source = new Point(e.offsetX, e.offsetY);
+  //   let pointSet = new Set<string>();
+  //   let lineMap = new Map();
+  //   // let neighborMap = new Map<string, Neighbor>();
+  //   const source = new Point(
+  //     Math.floor(Math.random() * 1000),
+  //     Math.floor(Math.random() * 1000),
+  //   );
+  //   const target = new Point(e.offsetX, e.offsetY);
+  //   // const source = new Point(340, 224);
+  //   // const target = new Point(582, 615);
 
-    let slines: Set<string> = new Set();
-    let tlines: Set<string> = new Set();
-    let smap = new Map<string, FourDirection>();
-    let tmap = new Map<string, FourDirection>();
-    smap.set(source.toString(), null);
-    tmap.set(target.toString(), null);
-    let ok = false;
-    let loop = 4;
-    const temp = loop;
-    while (!ok && loop > 0) {
-      loop -= 1;
-      getLines(tmap, tlines, pointSet, lineMap, 'left');
-      getLines(smap, slines, pointSet, lineMap, 'right');
-      for (let slineString of slines) {
-        let [sStartX, sStartY, sEndX, sEndY] = slineString
-          .split(' ')
-          .map((item) => {
-            return parseInt(item);
-          });
-        let sline = new Line(
-          null,
-          new Point(sStartX, sStartY),
-          new Point(sEndX, sEndY),
-        );
-        for (let tlineString of tlines) {
-          let [tStartX, tStartY, tEndX, tEndY] = tlineString
-            .split(' ')
-            .map((item) => {
-              return parseInt(item);
-            });
-          let tline = new Line(
-            null,
-            new Point(tStartX, tStartY),
-            new Point(tEndX, tEndY),
-          );
-          if (sline.intersectsWithLine(tline)) {
-            let intersectPoint = sline.intersectsWithLine(tline);
+  //   let slines: Set<string> = new Set();
+  //   let tlines: Set<string> = new Set();
+  //   let smap = new Map<string, FourDirection>();
+  //   let tmap = new Map<string, FourDirection>();
+  //   smap.set(source.toString(), null);
+  //   tmap.set(target.toString(), null);
+  //   let ok = false;
+  //   let loop = 4;
+  //   const temp = loop;
+  //   while (!ok && loop > 0) {
+  //     loop -= 1;
+  //     getLines(tmap, tlines, pointSet, lineMap, 'left');
+  //     getLines(smap, slines, pointSet, lineMap, 'right');
+  //     for (let slineString of slines) {
+  //       let [sStartX, sStartY, sEndX, sEndY] = slineString
+  //         .split(' ')
+  //         .map((item) => {
+  //           return parseInt(item);
+  //         });
+  //       let sline = new Line(
+  //         null,
+  //         new Point(sStartX, sStartY),
+  //         new Point(sEndX, sEndY),
+  //       );
+  //       for (let tlineString of tlines) {
+  //         let [tStartX, tStartY, tEndX, tEndY] = tlineString
+  //           .split(' ')
+  //           .map((item) => {
+  //             return parseInt(item);
+  //           });
+  //         let tline = new Line(
+  //           null,
+  //           new Point(tStartX, tStartY),
+  //           new Point(tEndX, tEndY),
+  //         );
+  //         if (sline.intersectsWithLine(tline)) {
+  //           let intersectPoint = sline.intersectsWithLine(tline);
 
-            // {
-            //   let rectangle = document.createElementNS(
-            //     'http://www.w3.org/2000/svg',
-            //     'rect',
-            //   );
-            //   rectangle.setAttribute('fill', 'black');
-            //   rectangle.setAttribute('x', `${intersectPoint.x - 2}`);
-            //   rectangle.setAttribute('y', `${intersectPoint.y - 2}`);
-            //   rectangle.setAttribute('width', `${4}`);
-            //   rectangle.setAttribute('height', `${4}`);
-            //   svg.appendChild(rectangle);
-            // }
-            // neighborMap.set(intersectPoint.toString(), {});
-            // let p1 = lineMap.get(slineString);
-            // let p2 = lineMap.get(tlineString);
-            pointSet.add(intersectPoint.toString());
+  //           // {
+  //           //   let rectangle = document.createElementNS(
+  //           //     'http://www.w3.org/2000/svg',
+  //           //     'rect',
+  //           //   );
+  //           //   rectangle.setAttribute('fill', 'black');
+  //           //   rectangle.setAttribute('x', `${intersectPoint.x - 2}`);
+  //           //   rectangle.setAttribute('y', `${intersectPoint.y - 2}`);
+  //           //   rectangle.setAttribute('width', `${4}`);
+  //           //   rectangle.setAttribute('height', `${4}`);
+  //           //   svg.appendChild(rectangle);
+  //           // }
+  //           // neighborMap.set(intersectPoint.toString(), {});
+  //           // let p1 = lineMap.get(slineString);
+  //           // let p2 = lineMap.get(tlineString);
+  //           pointSet.add(intersectPoint.toString());
 
-            let neighborMap = genNeighbors(pointSet);
-            // for (let key of Array.from(neighborMap.keys())) {
-            //   let rect = JSON.parse(key) as Point;
-            //   let rectangle = document.createElementNS(
-            //     'http://www.w3.org/2000/svg',
-            //     'rect',
-            //   );
-            //   rectangle.setAttribute('fill', 'lightblue');
-            //   rectangle.setAttribute('x', `${rect.x - 3}`);
-            //   rectangle.setAttribute('y', `${rect.y - 3}`);
-            //   rectangle.setAttribute('width', `${6}`);
-            //   rectangle.setAttribute('height', `${6}`);
-            //   svg.appendChild(rectangle);
-            // }
-            let d = aStar(neighborMap, source.toString(), target.toString());
-            sPath.setAttribute('d', d);
-            return;
-          }
-        }
-      }
-    }
-    if (!ok) {
-      let d = `M ${source.x} ${source.y} L ${source.x} ${target.y} L ${target.x} ${target.y}`;
-      sPath.setAttribute('d', d);
-    }
-  });
+  //           let neighborMap = genNeighbors(pointSet);
+  //           // for (let key of Array.from(neighborMap.keys())) {
+  //           //   let rect = JSON.parse(key) as Point;
+  //           //   let rectangle = document.createElementNS(
+  //           //     'http://www.w3.org/2000/svg',
+  //           //     'rect',
+  //           //   );
+  //           //   rectangle.setAttribute('fill', 'lightblue');
+  //           //   rectangle.setAttribute('x', `${rect.x - 3}`);
+  //           //   rectangle.setAttribute('y', `${rect.y - 3}`);
+  //           //   rectangle.setAttribute('width', `${6}`);
+  //           //   rectangle.setAttribute('height', `${6}`);
+  //           //   svg.appendChild(rectangle);
+  //           // }
+  //           let d = aStar(neighborMap, source.toString(), target.toString());
+  //           sPath.setAttribute('d', d);
+  //           return;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   if (!ok) {
+  //     let d = `M ${source.x} ${source.y} L ${source.x} ${target.y} L ${target.x} ${target.y}`;
+  //     sPath.setAttribute('d', d);
+  //   }
+  // });
   let sPath = document.createElementNS(xmlns, 'path');
 
   sPath.setAttribute('stroke', 'blue');
@@ -779,7 +779,7 @@ function main() {
   sPath.setAttribute('fill', 'none');
   svg.appendChild(sPath);
 
-  svg.addEventListener('mousemove', (e) => {
+  svg.addEventListener('click', (e) => {
     let pointSet = new Set<string>();
     let lineMap = new Map();
     // let neighborMap = new Map<string, Neighbor>();
@@ -804,38 +804,57 @@ function main() {
       getLines(tmap, tlines, pointSet, lineMap, 'left');
       getLines(smap, slines, pointSet, lineMap, 'right');
 
-      let lines = new Set(...slines, ...tlines);
-      for (let slineString of slines) {
-        let [sStartX, sStartY, sEndX, sEndY] = slineString
+      let lines = new Set([...slines, ...tlines]);
+      for (let line1String of lines) {
+        let [line1StartX, line1StartY, line1EndX, sEndY] = line1String
           .split(' ')
           .map((item) => {
             return parseInt(item);
           });
-        let sline = new Line(
+        let line1 = new Line(
           null,
-          new Point(sStartX, sStartY),
-          new Point(sEndX, sEndY),
+          new Point(line1StartX, line1StartY),
+          new Point(line1EndX, sEndY),
         );
-        for (let tlineString of tlines) {
-          let [tStartX, tStartY, tEndX, tEndY] = tlineString
+        for (let line2String of lines) {
+          let [line2StartX, line2StartY, line2EndX, line2EndY] = line2String
             .split(' ')
             .map((item) => {
               return parseInt(item);
             });
-          let tline = new Line(
+          let line2 = new Line(
             null,
-            new Point(tStartX, tStartY),
-            new Point(tEndX, tEndY),
+            new Point(line2StartX, line2StartY),
+            new Point(line2EndX, line2EndY),
           );
-          if (sline.intersectsWithLine(tline)) {
-            ok = true;
-            let intersectPoint = sline.intersectsWithLine(tline);
-
+          if (line1.intersectsWithLine(line2)) {
+            if (slines.has(line1String) && tlines.has(line2String)) {
+              ok = true;
+            } else if (slines.has(line2String) && tlines.has(line1String)) {
+              ok = true;
+            }
+            let intersectPoint = line1.intersectsWithLine(line2);
             pointSet.add(intersectPoint.toString());
           }
         }
       }
     }
+
+    for (let key of pointSet) {
+      let rect = JSON.parse(key) as Point;
+      let rectangle = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'rect',
+      );
+      rectangle.setAttribute('fill', 'lightblue');
+      rectangle.setAttribute('x', `${rect.x - 3}`);
+      rectangle.setAttribute('y', `${rect.y - 3}`);
+      rectangle.setAttribute('width', `${6}`);
+      rectangle.setAttribute('height', `${6}`);
+      svg.appendChild(rectangle);
+    }
+
+    debugger;
 
     if (!ok) {
       let d = `M ${source.x} ${source.y} L ${source.x} ${target.y} L ${target.x} ${target.y}`;
@@ -1047,21 +1066,21 @@ function getLines(
       }
     }
 
-    // for (let lineString of newLines) {
-    //   let [startX, startY, endX, endY] = lineString.split(' ');
-    //   let sPath = document.createElementNS(
-    //     'http://www.w3.org/2000/svg',
-    //     'path',
-    //   );
+    for (let lineString of newLines) {
+      let [startX, startY, endX, endY] = lineString.split(' ');
+      let sPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+      );
 
-    //   sPath.setAttribute('d', `M ${startX} ${startY} L ${endX} ${endY}`);
-    //   var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    //   sPath.setAttribute('stroke', 'black');
-    //   // sPath.setAttribute('stroke', '#' + randomColor);
-    //   sPath.setAttribute('stroke-width', '1');
+      sPath.setAttribute('d', `M ${startX} ${startY} L ${endX} ${endY}`);
+      var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      sPath.setAttribute('stroke', 'black');
+      // sPath.setAttribute('stroke', '#' + randomColor);
+      sPath.setAttribute('stroke-width', '1');
 
-    //   svg.appendChild(sPath);
-    // }
+      svg.appendChild(sPath);
+    }
   }
   newLines.forEach((item) => {
     lines.add(item);
@@ -1077,6 +1096,7 @@ function aStar(
     [key: string]: { g: number; f: number };
   };
   let cameFromMap = new Map();
+
   function getLowestFPointInOpenSet(openSet: OpenSet) {
     let result: string;
     for (let key in openSet) {
@@ -1089,31 +1109,59 @@ function aStar(
     }
     return result;
   }
+
+  function getHCost(
+    neighborMap: Map<string, Neighbor>,
+    source: string,
+    target: string,
+  ) {
+    let openSet: string[] = [];
+    let closedSet = new Set<string>();
+    let hMap = {};
+    openSet.push(target);
+
+    hMap[target] = 0;
+    while (openSet.length !== 0) {
+      let current = openSet.shift();
+      let neighbors = neighborMap.get(current);
+      closedSet.add(current);
+      for (let key in neighbors) {
+        let neighbor = neighbors[key];
+        if (closedSet.has(neighbor)) {
+          continue;
+        }
+        hMap[neighbor] = hMap[current] + 1;
+        openSet.push(neighbor);
+      }
+    }
+    return hMap;
+  }
   function heuristic(a: string, b: string) {
     let aPoint = JSON.parse(a) as Point;
     let bPoint = JSON.parse(b) as Point;
     // return Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y);
     return Math.hypot(aPoint.x - bPoint.x, aPoint.y - bPoint.y);
   }
+  let hMap = getHCost(neighborMap, source, target);
   let openSet: OpenSet = {};
   let closedSet = new Set<string>();
   openSet[source] = { g: 0, f: heuristic(source, target) };
   closedSet.add(source);
   while (Object.keys(openSet).length !== 0) {
     let current = getLowestFPointInOpenSet(openSet);
-    // let rect = JSON.parse(current) as Point;
-    // {
-    //   let rectangle = document.createElementNS(
-    //     'http://www.w3.org/2000/svg',
-    //     'rect',
-    //   );
-    //   rectangle.setAttribute('fill', 'green');
-    //   rectangle.setAttribute('x', `${rect.x - 2}`);
-    //   rectangle.setAttribute('y', `${rect.y - 2}`);
-    //   rectangle.setAttribute('width', `${4}`);
-    //   rectangle.setAttribute('height', `${4}`);
-    //   svg.appendChild(rectangle);
-    // }
+    let rect = JSON.parse(current) as Point;
+    {
+      let rectangle = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'rect',
+      );
+      rectangle.setAttribute('fill', 'green');
+      rectangle.setAttribute('x', `${rect.x - 2}`);
+      rectangle.setAttribute('y', `${rect.y - 2}`);
+      rectangle.setAttribute('width', `${4}`);
+      rectangle.setAttribute('height', `${4}`);
+      svg.appendChild(rectangle);
+    }
     if (current === target) {
       break;
     }
@@ -1136,7 +1184,9 @@ function aStar(
       let tempG = openSet[current].g + 1;
       if (tempG < openSet[neighbor].g) {
         openSet[neighbor].g = tempG;
-        openSet[neighbor].f = 2 * heuristic(neighbor, target);
+        // openSet[neighbor].f = 2 * heuristic(neighbor, target);
+        openSet[neighbor].f = tempG + 10 * hMap[neighbor];
+
         cameFromMap.set(neighbor, current);
       }
     }
