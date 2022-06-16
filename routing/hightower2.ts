@@ -580,44 +580,52 @@ function genNeighbors(pointStringSet: Set<string>): Map<string, Neighbor> {
       }
       if (otherPoint.x === point.x) {
         // * top
-        if (result.get(pointString).top == null) {
-          result.set(pointString, { top: otherPointString });
-        } else {
-          let oldString = result.get(pointString).top;
-          let oldPoint = JSON.parse(oldString) as Point;
-          if (otherPoint.y < point.y && otherPoint.y > oldPoint.y) {
+        if (otherPoint.y < point.y) {
+          if (result.get(pointString).top == null) {
             result.get(pointString).top = otherPointString;
+          } else {
+            let oldString = result.get(pointString).top;
+            let oldPoint = JSON.parse(oldString) as Point;
+            if (otherPoint.y > oldPoint.y) {
+              result.get(pointString).top = otherPointString;
+            }
           }
         }
         // * bottom
-        if (result.get(pointString).bottom == null) {
-          result.set(pointString, { bottom: otherPointString });
-        } else {
-          let oldString = result.get(pointString).bottom;
-          let oldPoint = JSON.parse(oldString) as Point;
-          if (otherPoint.y > point.y && otherPoint.y < oldPoint.y) {
+        if (otherPoint.y > point.y) {
+          if (result.get(pointString).bottom == null) {
             result.get(pointString).bottom = otherPointString;
+          } else {
+            let oldString = result.get(pointString).bottom;
+            let oldPoint = JSON.parse(oldString) as Point;
+            if (otherPoint.y < oldPoint.y) {
+              result.get(pointString).bottom = otherPointString;
+            }
           }
         }
       } else if (otherPoint.y === point.y) {
         // * right
-        if (result.get(pointString).right == null) {
-          result.set(pointString, { right: otherPointString });
-        } else {
-          let oldString = result.get(pointString).right;
-          let oldPoint = JSON.parse(oldString) as Point;
-          if (otherPoint.x > point.x && otherPoint.x < oldPoint.x) {
+        if (otherPoint.x > point.x) {
+          if (result.get(pointString).right == null) {
             result.get(pointString).right = otherPointString;
+          } else {
+            let oldString = result.get(pointString).right;
+            let oldPoint = JSON.parse(oldString) as Point;
+            if (otherPoint.x < oldPoint.x) {
+              result.get(pointString).right = otherPointString;
+            }
           }
         }
         // * left
-        if (result.get(pointString).left == null) {
-          result.set(pointString, { left: otherPointString });
-        } else {
-          let oldString = result.get(pointString).left;
-          let oldPoint = JSON.parse(oldString) as Point;
-          if (otherPoint.x < point.x && otherPoint.x > oldPoint.x) {
+        if (otherPoint.x < point.x) {
+          if (result.get(pointString).left == null) {
             result.get(pointString).left = otherPointString;
+          } else {
+            let oldString = result.get(pointString).left;
+            let oldPoint = JSON.parse(oldString) as Point;
+            if (otherPoint.x > oldPoint.x) {
+              result.get(pointString).left = otherPointString;
+            }
           }
         }
       }
@@ -643,16 +651,16 @@ function main() {
   rectangles.push(new Rectangle(40, 550, 200, 20));
   rectangles.push(new Rectangle(60, 450, 20, 200));
 
-  // for (let i = 0; i < 50; i++) {
-  //   rectangles.push(
-  //     new Rectangle(
-  //       Math.floor(Math.random() * 1000),
-  //       Math.floor(Math.random() * 1000),
-  //       Math.floor(Math.random() * 120),
-  //       Math.floor(Math.random() * 120),
-  //     ),
-  //   );
-  // }
+  for (let i = 0; i < 450; i++) {
+    rectangles.push(
+      new Rectangle(
+        Math.floor(Math.random() * 1000),
+        Math.floor(Math.random() * 1000),
+        Math.floor(Math.random() * 120),
+        Math.floor(Math.random() * 120),
+      ),
+    );
+  }
 
   for (let rect of rectangles) {
     let rectangle = document.createElementNS(
@@ -675,13 +683,13 @@ function main() {
     let pointSet = new Set<string>();
     let lineMap = new Map();
     // let neighborMap = new Map<string, Neighbor>();
-    // const source = new Point(
-    //   Math.floor(Math.random() * 1000),
-    //   Math.floor(Math.random() * 1000),
-    // );
-    // const target = new Point(e.offsetX, e.offsetY);
-    const source = new Point(703, 846);
-    const target = new Point(304, 276);
+    const source = new Point(
+      Math.floor(Math.random() * 1000),
+      Math.floor(Math.random() * 1000),
+    );
+    const target = new Point(e.offsetX, e.offsetY);
+    // const source = new Point(340, 224);
+    // const target = new Point(582, 615);
 
     let slines: Set<string> = new Set();
     let tlines: Set<string> = new Set();
@@ -721,81 +729,37 @@ function main() {
           if (sline.intersectsWithLine(tline)) {
             let intersectPoint = sline.intersectsWithLine(tline);
 
-            {
-              let rectangle = document.createElementNS(
-                'http://www.w3.org/2000/svg',
-                'rect',
-              );
-              rectangle.setAttribute('fill', 'black');
-              rectangle.setAttribute('x', `${intersectPoint.x - 2}`);
-              rectangle.setAttribute('y', `${intersectPoint.y - 2}`);
-              rectangle.setAttribute('width', `${4}`);
-              rectangle.setAttribute('height', `${4}`);
-              svg.appendChild(rectangle);
-            }
+            // {
+            //   let rectangle = document.createElementNS(
+            //     'http://www.w3.org/2000/svg',
+            //     'rect',
+            //   );
+            //   rectangle.setAttribute('fill', 'black');
+            //   rectangle.setAttribute('x', `${intersectPoint.x - 2}`);
+            //   rectangle.setAttribute('y', `${intersectPoint.y - 2}`);
+            //   rectangle.setAttribute('width', `${4}`);
+            //   rectangle.setAttribute('height', `${4}`);
+            //   svg.appendChild(rectangle);
+            // }
             // neighborMap.set(intersectPoint.toString(), {});
-            let p1 = lineMap.get(slineString);
-            let p2 = lineMap.get(tlineString);
-            pointSet.add(intersectPoint.toString());
-            let point1 = JSON.parse(p1) as Point;
-            let point2 = JSON.parse(p2) as Point;
-            // if (point1.y === intersectPoint.y) {
-            //   if (point1.x < intersectPoint.x) {
-            //     neighborMap.get(p1).right = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).left = p1;
-            //   } else if (point1.x > intersectPoint.x) {
-            //     neighborMap.get(p1).left = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).right = p1;
-            //   }
-            // } else if (point1.x === intersectPoint.x) {
-            //   if (point1.y < intersectPoint.y) {
-            //     neighborMap.get(p1).bottom = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).top = p1;
-            //   } else if (point1.y > intersectPoint.y) {
-            //     neighborMap.get(p1).top = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).bottom = p1;
-            //   }
-            // }
-
-            // if (point2.y === intersectPoint.y) {
-            //   if (point2.x < intersectPoint.x) {
-            //     neighborMap.get(p2).right = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).left = p2;
-            //   } else if (point2.x > intersectPoint.x) {
-            //     neighborMap.get(p2).left = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).right = p2;
-            //   }
-            // } else if (point2.x === intersectPoint.x) {
-            //   if (point2.y < intersectPoint.y) {
-            //     neighborMap.get(p2).bottom = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).top = p2;
-            //   } else if (point2.y > intersectPoint.y) {
-            //     neighborMap.get(p2).top = intersectPoint.toString();
-            //     neighborMap.get(intersectPoint.toString()).bottom = p2;
-            //   }
-            // }
-            // console.log(true, temp - loop);
-            // ok = true;
-            // let dArray = [];
-            // let d = '';
-            // dArray.push(lineMap.get(slineString), intersectPoint.toString());
             // let p1 = lineMap.get(slineString);
             // let p2 = lineMap.get(tlineString);
-            // console.log(neighborMap);
+            pointSet.add(intersectPoint.toString());
+
             let neighborMap = genNeighbors(pointSet);
-            for (let key of Array.from(neighborMap.keys())) {
-              let rect = JSON.parse(key) as Point;
-              let rectangle = document.createElementNS(
-                'http://www.w3.org/2000/svg',
-                'rect',
-              );
-              rectangle.setAttribute('fill', 'lightblue');
-              rectangle.setAttribute('x', `${rect.x - 3}`);
-              rectangle.setAttribute('y', `${rect.y - 3}`);
-              rectangle.setAttribute('width', `${6}`);
-              rectangle.setAttribute('height', `${6}`);
-              svg.appendChild(rectangle);
-            }
+            // for (let key of Array.from(neighborMap.keys())) {
+            //   let rect = JSON.parse(key) as Point;
+            //   let rectangle = document.createElementNS(
+            //     'http://www.w3.org/2000/svg',
+            //     'rect',
+            //   );
+            //   rectangle.setAttribute('fill', 'lightblue');
+            //   rectangle.setAttribute('x', `${rect.x - 3}`);
+            //   rectangle.setAttribute('y', `${rect.y - 3}`);
+            //   rectangle.setAttribute('width', `${6}`);
+            //   rectangle.setAttribute('height', `${6}`);
+            //   svg.appendChild(rectangle);
+            // }
             let d = aStar(neighborMap, source.toString(), target.toString());
             sPath.setAttribute('d', d);
             return;
@@ -814,6 +778,75 @@ function main() {
   sPath.setAttribute('stroke-width', '3');
   sPath.setAttribute('fill', 'none');
   svg.appendChild(sPath);
+
+  svg.addEventListener('mousemove', (e) => {
+    let pointSet = new Set<string>();
+    let lineMap = new Map();
+    // let neighborMap = new Map<string, Neighbor>();
+    // const source = new Point(
+    //   Math.floor(Math.random() * 1000),
+    //   Math.floor(Math.random() * 1000),
+    // );
+    const target = new Point(e.offsetX, e.offsetY);
+    const source = new Point(340, 224);
+    // const target = new Point(582, 615);
+
+    let slines: Set<string> = new Set();
+    let tlines: Set<string> = new Set();
+    let smap = new Map<string, FourDirection>();
+    let tmap = new Map<string, FourDirection>();
+    smap.set(source.toString(), null);
+    tmap.set(target.toString(), null);
+    let ok = false;
+    let loop = 4;
+    while (!ok && loop > 0) {
+      loop -= 1;
+      getLines(tmap, tlines, pointSet, lineMap, 'left');
+      getLines(smap, slines, pointSet, lineMap, 'right');
+
+      let lines = new Set(...slines, ...tlines);
+      for (let slineString of slines) {
+        let [sStartX, sStartY, sEndX, sEndY] = slineString
+          .split(' ')
+          .map((item) => {
+            return parseInt(item);
+          });
+        let sline = new Line(
+          null,
+          new Point(sStartX, sStartY),
+          new Point(sEndX, sEndY),
+        );
+        for (let tlineString of tlines) {
+          let [tStartX, tStartY, tEndX, tEndY] = tlineString
+            .split(' ')
+            .map((item) => {
+              return parseInt(item);
+            });
+          let tline = new Line(
+            null,
+            new Point(tStartX, tStartY),
+            new Point(tEndX, tEndY),
+          );
+          if (sline.intersectsWithLine(tline)) {
+            ok = true;
+            let intersectPoint = sline.intersectsWithLine(tline);
+
+            pointSet.add(intersectPoint.toString());
+          }
+        }
+      }
+    }
+
+    if (!ok) {
+      let d = `M ${source.x} ${source.y} L ${source.x} ${target.y} L ${target.x} ${target.y}`;
+      sPath.setAttribute('d', d);
+    } else {
+      let neighborMap = genNeighbors(pointSet);
+
+      let d = aStar(neighborMap, source.toString(), target.toString());
+      sPath.setAttribute('d', d);
+    }
+  });
 }
 
 function getLines(
@@ -827,6 +860,7 @@ function getLines(
   let tempMap = new Map<string, FourDirection>(map);
   map.clear();
   for (let pointJson of Array.from(tempMap.keys())) {
+    pointSet.add(pointJson);
     let point = JSON.parse(pointJson) as Point;
     if (tempMap.get(pointJson) == null) {
       tempMap.set(pointJson, {});
@@ -898,13 +932,6 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).right = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).left = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { left: pointJson });
-        // }
       }
     }
 
@@ -916,13 +943,6 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).left = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).right = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { right: pointJson });
-        // }
       }
     }
 
@@ -934,13 +954,6 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).top = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).bottom = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { bottom: pointJson });
-        // }
       }
     }
 
@@ -952,13 +965,6 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).bottom = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).top = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { top: pointJson });
-        // }
       }
     }
 
@@ -968,7 +974,6 @@ function getLines(
     hStart = left ? `${left.x + left.width + 1} ${point.y}` : `${1} ${point.y}`;
     hEnd = right ? `${right.x - 1} ${point.y}` : `${width - 1} ${point.y}`;
     if (!lines.has(hStart + ' ' + hEnd)) {
-      // console.log(hStart + ' ' + hEnd);
       newLines.add(hStart + ' ' + hEnd);
       lineMap.set(hStart + ' ' + hEnd, pointJson);
     }
@@ -988,28 +993,12 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).top = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).bottom = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { bottom: pointJson });
-        // }
       }
       if (!bottom || bottom.y > left.y + left.height + 1) {
         const escapePoint = new Point(point.x, left.y + left.height + 1);
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).bottom = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).top = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { top: pointJson });
-        // }
       }
     }
     //
@@ -1019,28 +1008,12 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).top = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).bottom = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { bottom: pointJson });
-        // }
       }
       if (!bottom || bottom.y > right.y + right.height + 1) {
         const escapePoint = new Point(point.x, right.y + right.height + 1);
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).bottom = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).top = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { top: pointJson });
-        // }
       }
     }
     //
@@ -1050,28 +1023,12 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).right = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).left = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { left: pointJson });
-        // }
       }
       if (!left || left.x + left.width + 1 < bottom.x) {
         const escapePoint = new Point(bottom.x - 1, point.y);
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).left = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).right = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { right: pointJson });
-        // }
       }
     }
     //
@@ -1081,28 +1038,12 @@ function getLines(
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).right = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).left = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { left: pointJson });
-        // }
       }
       if (!left || left.x + left.width + 1 < top.x) {
         const escapePoint = new Point(top.x - 1, point.y);
         if (!map.has(escapePoint.toString())) {
           map.set(escapePoint.toString(), null);
         }
-
-        pointSet.add(escapePoint.toString());
-        // neighborMap.get(pointJson).left = escapePoint.toString();
-        // if (neighborMap.get(escapePoint.toString())) {
-        //   neighborMap.get(escapePoint.toString()).right = pointJson;
-        // } else {
-        //   neighborMap.set(escapePoint.toString(), { right: pointJson });
-        // }
       }
     }
 
@@ -1151,7 +1092,8 @@ function aStar(
   function heuristic(a: string, b: string) {
     let aPoint = JSON.parse(a) as Point;
     let bPoint = JSON.parse(b) as Point;
-    return Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y);
+    // return Math.abs(aPoint.x - bPoint.x) + Math.abs(aPoint.y - bPoint.y);
+    return Math.hypot(aPoint.x - bPoint.x, aPoint.y - bPoint.y);
   }
   let openSet: OpenSet = {};
   let closedSet = new Set<string>();
@@ -1159,19 +1101,19 @@ function aStar(
   closedSet.add(source);
   while (Object.keys(openSet).length !== 0) {
     let current = getLowestFPointInOpenSet(openSet);
-    let rect = JSON.parse(current) as Point;
-    {
-      let rectangle = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'rect',
-      );
-      rectangle.setAttribute('fill', 'green');
-      rectangle.setAttribute('x', `${rect.x - 2}`);
-      rectangle.setAttribute('y', `${rect.y - 2}`);
-      rectangle.setAttribute('width', `${4}`);
-      rectangle.setAttribute('height', `${4}`);
-      svg.appendChild(rectangle);
-    }
+    // let rect = JSON.parse(current) as Point;
+    // {
+    //   let rectangle = document.createElementNS(
+    //     'http://www.w3.org/2000/svg',
+    //     'rect',
+    //   );
+    //   rectangle.setAttribute('fill', 'green');
+    //   rectangle.setAttribute('x', `${rect.x - 2}`);
+    //   rectangle.setAttribute('y', `${rect.y - 2}`);
+    //   rectangle.setAttribute('width', `${4}`);
+    //   rectangle.setAttribute('height', `${4}`);
+    //   svg.appendChild(rectangle);
+    // }
     if (current === target) {
       break;
     }
