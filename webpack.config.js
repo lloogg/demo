@@ -9,6 +9,7 @@ module.exports = {
     test2: path.resolve(__dirname, './path-finding/test2'),
     hightower: path.resolve(__dirname, './routing/hightower'),
     hightower2: path.resolve(__dirname, './routing/hightower2'),
+    'react-router-lazy': path.resolve(__dirname, './react-router-lazy/main'),
   },
   // entry: path.resolve(__dirname, './graph/index'),
 
