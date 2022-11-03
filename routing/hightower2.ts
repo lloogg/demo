@@ -402,6 +402,9 @@ rectangles = rectangles.map((item) => {
 //     sPath.setAttribute('d', d);
 //   }
 // });
+
+let paths:SVGPathElement[] = []
+
 let sPath = document.createElementNS(xmlns, 'path');
 
 sPath.setAttribute('stroke', 'blue');
@@ -521,6 +524,11 @@ svg.addEventListener('click', (e) => {
     let neighborMap = genNeighbors(pointSet);
     let d = aStar(neighborMap, source.toString(), target.toString());
     sPath.setAttribute('d', d);
+
+    for (let path of paths) {
+      path.remove()
+    }
+    paths = []
   }
 });
 
@@ -730,12 +738,12 @@ function getLines(
       );
 
       sPath.setAttribute('d', `M ${startX} ${startY} L ${endX} ${endY}`);
-      var randomColor = Math.floor(Math.random() * 16777215).toString(16);
       sPath.setAttribute('stroke', 'black');
-      // sPath.setAttribute('stroke', '#' + randomColor);
       sPath.setAttribute('stroke-width', '1');
 
       svg.appendChild(sPath);
+      paths.push(sPath)
+
     }
   }
   newLines.forEach((item) => {
