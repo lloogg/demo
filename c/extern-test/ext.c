@@ -1,0 +1,1 @@
+int globalVar = 100;

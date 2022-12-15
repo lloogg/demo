@@ -6,3 +6,4 @@ dist
 target
 *.cmi
 *.cmo
+c/**/*.exe
