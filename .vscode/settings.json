@@ -3,6 +3,9 @@
   "compile-hero.disable-compile-files-on-did-save-code": true,
   "files.associations": {
     "iostream": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "stdio.h": "c",
+    "string": "cpp",
+    "xstring": "cpp"
   }
 }

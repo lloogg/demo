@@ -7,6 +7,7 @@ void test1()
     int *p = (int *)&a; // 对 const 修饰的局部变量为常量的变量取地址，会分配一个临时空间 int temp = a; *p = &temp;
     *p = 20;
     cout << a << endl;
+    printf("%p %p", (int *)&a, (int *)&a); // 两者不同
 }
 
 void test2()
@@ -20,18 +21,19 @@ void test2()
     *p = 20;
     cout << a << endl;
 }
-struct stu {
+struct stu
+{
     int a;
     int b;
 };
 void test3()
 {
-// const 修饰的变量为自定义变量时，保存在栈区
+    // const 修饰的变量为自定义变量时，保存在栈区
     const stu obj = {1, 2};
     stu *p = (stu *)&obj;
     p->a = 3;
     p->b = 4;
-    cout << obj.a << " "<< obj.b << endl;
+    cout << obj.a << " " << obj.b << endl;
 }
 int main()
 {
