@@ -7,3 +7,4 @@ target
 *.cmi
 *.cmo
 c/**/*.exe
+cpp/**/*.exe
