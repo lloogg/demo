@@ -34,6 +34,7 @@ public:
 class Person
 {
 public:
+    // explicit 表示不能隐式调用构造函数
     explicit Person(int p_age, string phone_name, string game_name) : age(p_age), phone(phone_name), game(game_name)
     {
         cout << "Person 构造函数" << endl;

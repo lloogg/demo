@@ -6,6 +6,9 @@
     "ostream": "cpp",
     "stdio.h": "c",
     "string": "cpp",
-    "xstring": "cpp"
+    "xstring": "cpp",
+    "system_error": "cpp",
+    "xlocale": "cpp",
+    "iosfwd": "cpp"
   }
 }
