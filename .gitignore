@@ -8,3 +8,4 @@ target
 *.cmo
 c/**/*.exe
 cpp/**/*.exe
+*.stackdump
