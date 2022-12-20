@@ -20,7 +20,6 @@ void array_sort(T &arr, int s, int e)
     int pointer = e;
     int i = s;
     int j = e;
-    cout << " i = " << i << endl;
     while (i < j)
     {
 
@@ -34,7 +33,6 @@ void array_sort(T &arr, int s, int e)
         }
         swap_temp(*(arr + i), *(arr + j));
     }
-    cout << i << " " << j << endl;
     swap_temp(*(arr + i), *(arr + e));
     array_sort(arr, s, i - 1);
     array_sort(arr, i + 1, e);
