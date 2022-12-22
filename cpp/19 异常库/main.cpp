@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+#include <stdexcept>
+int divide(int a, int b)
+{
+
+    if (b == 0)
+    {
+        throw out_of_range("除数不能为零");
+    }
+    return a / b;
+}
+int main()
+{
+    int a = 1;
+    int b = 0;
+    int res;
+    try
+    {
+        res = divide(a, b);
+        cout << res << endl;
+    }
+    catch (exception &e)
+    {
+        cout << e.what() << endl;
+    }
+    return 0;
+}

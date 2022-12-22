@@ -13,6 +13,7 @@
     "exception": "cpp",
     "memory": "cpp",
     "utility": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "algorithm": "cpp"
   }
 }
