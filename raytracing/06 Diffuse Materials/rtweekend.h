@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
+// 等价于 C 中的 <stdlib.h>
 #include <cstdlib>
 
 using std::make_shared;
@@ -21,6 +22,8 @@ inline double degrees_to_radians(double degrees)
 inline double random_double()
 {
     // Returns a random real in [0, 1)
+    // C/C++ 中的 rand 函数生成一个 0 到 RAND_MAX 的随机的整数
+    // C 语言标准并没有规定 RAND_MAX 的具体数值，只是规定它的值至少为 32767
     return rand() / (RAND_MAX + 1.0);
 }
 

@@ -25,7 +25,9 @@ public:
 bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
 {
     hit_record temp_rec;
+    // 列表中的物体是否有一个被光线击中
     bool hit_anything = false;
+    // 光线击中最小的根
     auto closest_so_far = t_max;
 
     for (const auto &object : objects)
