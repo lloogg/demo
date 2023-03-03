@@ -86,13 +86,4 @@ int main()
         }
     }
     std::cerr << "\nDone.\n";
-    // std::cerr << hit_sphere(point3(1, 1, 1), 0.5, ray(point3(0, 0, 0), vec3(0.1, 0.5, 0.5)));
-
-    // vec3 vec(1.0, 3.0, 1.0);
-    // double one = vec[0];
-    // double two = vec[1];
-    // double three = vec[2];
-    // std::cout << std::endl;
-    // std::cout << one << " " << two << " " << three << std::endl;
-    // std::cout << vec.length() << std::endl;
 }
