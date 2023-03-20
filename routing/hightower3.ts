@@ -421,10 +421,31 @@ svg.addEventListener('click', (e) => {
   let debugRects: SVGRectElement[] = [];
   if (source == null) {
     source = new Point(e.offsetX, e.offsetY);
+    let rectangle = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'rect',
+    );
+    rectangle.setAttribute('fill', 'lightblue');
+    rectangle.setAttribute('x', `${source.x - 3}`);
+    rectangle.setAttribute('y', `${source.y - 3}`);
+    rectangle.setAttribute('width', `${6}`);
+    rectangle.setAttribute('height', `${6}`);
+    svg.appendChild(rectangle);
     return;
   }
+  
   if (target == null) {
     target = new Point(e.offsetX, e.offsetY);
+    let rectangle = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'rect',
+    );
+    rectangle.setAttribute('fill', 'lightblue');
+    rectangle.setAttribute('x', `${target.x - 3}`);
+    rectangle.setAttribute('y', `${target.y - 3}`);
+    rectangle.setAttribute('width', `${6}`);
+    rectangle.setAttribute('height', `${6}`);
+    svg.appendChild(rectangle);
     return;
   }
 
@@ -853,3 +874,8 @@ function aStar(
   console.log(d);
   return d;
 }
+
+
+document.querySelector('#b1').addEventListener('click', () => {
+  
+})
