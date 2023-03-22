@@ -1,0 +1,3 @@
+D:/github/demo/build/CMakeFiles/Rasterizer.dir
+D:/github/demo/build/CMakeFiles/ALL_BUILD.dir
+D:/github/demo/build/CMakeFiles/ZERO_CHECK.dir

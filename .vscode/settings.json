@@ -1,6 +1,5 @@
 {
   "liveServer.settings.port": 5501,
-  "compile-hero.disable-compile-files-on-did-save-code": true,
   "files.associations": {
     "iostream": "cpp",
     "ostream": "cpp",
@@ -47,6 +46,12 @@
     "xlocnum": "cpp",
     "xmemory": "cpp",
     "xstddef": "cpp",
-    "xtr1common": "cpp"
-  }
+    "xtr1common": "cpp",
+    "core": "cpp"
+  },
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    "VCPKG_TARGET_TRIPLET": "x64-windows"
+  },
+  "cmake.sourceDirectory": "${workspaceFolder}/games/02 Assignment",
 }
