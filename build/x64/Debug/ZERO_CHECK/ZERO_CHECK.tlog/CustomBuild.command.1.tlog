@@ -1,6 +1,6 @@
-^D:\GITHUB\DEMO\BUILD\CMAKEFILES\752628C4F98B01D293D5D08BBCE1AA7D\GENERATE.STAMP.RULE
+^C:\USERS\SEPTLOG\DOWNLOADS\GITHUB\MINE\DEMO\BUILD\CMAKEFILES\039709D44885D155D49469797A20B515\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SD:/github/demo/games/02 Assignment" -BD:/github/demo/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/github/demo/build/Rasterizer.sln
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/septlog/Downloads/github/mine/demo/games/03 -BC:/Users/septlog/Downloads/github/mine/demo/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/septlog/Downloads/github/mine/demo/build/Rasterizer.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

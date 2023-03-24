@@ -1,6 +1,6 @@
-^D:\GITHUB\DEMO\GAMES\02 ASSIGNMENT\CMAKELISTS.TXT
+^C:\USERS\SEPTLOG\DOWNLOADS\GITHUB\MINE\DEMO\GAMES\03\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SD:/github/demo/games/02 Assignment" -BD:/github/demo/build --check-stamp-file D:/github/demo/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/septlog/Downloads/github/mine/demo/games/03 -BC:/Users/septlog/Downloads/github/mine/demo/build --check-stamp-file C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

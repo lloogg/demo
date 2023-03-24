@@ -28,6 +28,11 @@ C:/Program Files/CMake/share/cmake-3.26/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-3.26/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-3.26/Modules/Platform/WindowsPaths.cmake
 C:/Program Files/CMake/share/cmake-3.26/Modules/SelectLibraryConfigurations.cmake
+C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/3.26.0-rc2/CMakeCCompiler.cmake
+C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/3.26.0-rc2/CMakeCXXCompiler.cmake
+C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/3.26.0-rc2/CMakeRCCompiler.cmake
+C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/3.26.0-rc2/CMakeSystem.cmake
+C:/Users/septlog/Downloads/github/mine/demo/games/03/CMakeLists.txt
 C:/vcpkg/installed/x64-windows/share/opencv/OpenCVConfig-version.cmake
 C:/vcpkg/installed/x64-windows/share/opencv/OpenCVConfig.cmake
 C:/vcpkg/installed/x64-windows/share/opencv/OpenCVModules-debug.cmake
@@ -46,8 +51,3 @@ C:/vcpkg/installed/x64-windows/share/quirc/quirc-config-release.cmake
 C:/vcpkg/installed/x64-windows/share/quirc/quirc-config.cmake
 C:/vcpkg/installed/x64-windows/share/tiff/vcpkg-cmake-wrapper.cmake
 C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-D:/github/demo/build/CMakeFiles/3.26.0-rc3/CMakeCCompiler.cmake
-D:/github/demo/build/CMakeFiles/3.26.0-rc3/CMakeCXXCompiler.cmake
-D:/github/demo/build/CMakeFiles/3.26.0-rc3/CMakeRCCompiler.cmake
-D:/github/demo/build/CMakeFiles/3.26.0-rc3/CMakeSystem.cmake
-D:/github/demo/games/02 Assignment/CMakeLists.txt

@@ -47,11 +47,30 @@
     "xmemory": "cpp",
     "xstddef": "cpp",
     "xtr1common": "cpp",
-    "core": "cpp"
+    "core": "cpp",
+    "complex": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "functional": "cpp",
+    "list": "cpp",
+    "map": "cpp",
+    "queue": "cpp",
+    "ranges": "cpp",
+    "ratio": "cpp",
+    "set": "cpp",
+    "span": "cpp",
+    "sstream": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp",
+    "unordered_map": "cpp",
+    "xhash": "cpp",
+    "xtree": "cpp",
+    "eigen": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
     "VCPKG_TARGET_TRIPLET": "x64-windows"
   },
-  "cmake.sourceDirectory": "${workspaceFolder}/games/02 Assignment",
+  "cmake.sourceDirectory": "${workspaceFolder}/games/03",
+  "clang-format.executable": "D:/_/dccGUI/dccast/bin/clang-format.exe"
 }

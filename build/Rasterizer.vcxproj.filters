@@ -1,33 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\github\demo\games\02 Assignment\main.cpp">
+    <ClCompile Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\github\demo\games\02 Assignment\rasterizer.cpp">
+    <ClCompile Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\rasterizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\github\demo\games\02 Assignment\Triangle.cpp">
+    <ClCompile Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\Triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\github\demo\games\02 Assignment\rasterizer.hpp">
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\rasterizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\github\demo\games\02 Assignment\Triangle.hpp">
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\global.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\Triangle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\Shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\OBJ_Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\github\demo\games\02 Assignment\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\septlog\Downloads\github\mine\demo\games\03\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{916ABD43-E856-3081-8150-0112B32AFF43}</UniqueIdentifier>
+      <UniqueIdentifier>{61350CA4-ED93-355B-993C-A55E1E98F618}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{AFA847BF-2F8C-3745-9055-B182598DCC85}</UniqueIdentifier>
+      <UniqueIdentifier>{A56A2FBD-9CCB-3BA4-BD9B-FBE1A43C3424}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
