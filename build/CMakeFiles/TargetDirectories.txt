@@ -1,3 +1,0 @@
-C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/Rasterizer.dir
-C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/septlog/Downloads/github/mine/demo/build/CMakeFiles/ZERO_CHECK.dir

@@ -9,3 +9,4 @@ target
 c/**/*.exe
 cpp/**/*.exe
 *.stackdump
+build/
