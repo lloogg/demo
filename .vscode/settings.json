@@ -65,7 +65,20 @@
     "unordered_map": "cpp",
     "xhash": "cpp",
     "xtree": "cpp",
-    "eigen": "cpp"
+    "eigen": "cpp",
+    "charconv": "cpp",
+    "chrono": "cpp",
+    "format": "cpp",
+    "forward_list": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp",
+    "locale": "cpp",
+    "mutex": "cpp",
+    "optional": "cpp",
+    "xlocbuf": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xloctime": "cpp"
   },
   "cmake.configureSettings": {
     "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",

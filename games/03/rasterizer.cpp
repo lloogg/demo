@@ -147,7 +147,7 @@ auto to_vec4(const Eigen::Vector3f &v3, float w = 1.0f)
     return Vector4f(v3.x(), v3.y(), v3.z(), w);
 }
 
-static bool insideTriangle(int x, int y, const Vector4f *_v)
+static bool insideTriangle(float x, float y, const Vector4f *_v)
 {
     Vector3f v[3];
     for (int i = 0; i < 3; i++)
@@ -259,23 +259,25 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
 {
     // TODO: From your HW3, get the triangle rasterization code.
     // TODO: Inside your rasterization loop:
-    auto v = t.v;
+    auto v = t.toVector4();
     auto color = t.color;
     auto normal = t.normal;
     auto tex_coords = t.tex_coords;
     auto shadingcoords = t.tex_coords;
 
-    auto x1 = (int)std::min(std::min(v[0][0], v[1][0]), v[2][0]);
-    auto x2 = (int)std::max(std::max(v[0][0], v[1][0]), v[2][0]);
+    auto x1 = std::min({v[0].x(), v[1].x(),v[2].x()});
+    auto x2 = std::max({v[0].x(), v[1].x(),v[2].x()});
 
-    auto y1 = (int)std::min(std::min(v[0][1], v[1][1]), v[2][1]);
-    auto y2 = (int)std::max(std::max(v[0][1], v[1][1]), v[2][1]);
+    auto y1 = std::min({v[0].y(), v[1].y(),v[2].y()});
+    auto y2 = std::max({v[0].y(), v[1].y(),v[2].y()});
 
-    for (int y = y1; y < y2; y++)
+    // 抗锯齿，x和y每次加0.5
+    
+    for (float y = y1; y < y2; y+=0.5)
     {
-        for (int x = x1; x < x2; x++)
+        for (float x = x1; x < x2; x+=0.5)
         {
-            if (insideTriangle(x, y, v))
+            if (insideTriangle(x, y, t.v))
             {
                 auto [alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
                 float Z = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
@@ -284,12 +286,14 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                 int index = get_index(x, y);
                 if (-zp < depth_buf[index])
                 {
+                    depth_buf[index] = -zp;
                     // TODO: Interpolate the attributes:
                     auto interpolated_color = alpha * color[0] + beta * color[1] + gamma * color[2];
-                    auto interpolated_normal = alpha * normal[0] + beta * normal[1] + gamma * normal[2];
-                    auto interpolated_texcoords = alpha * tex_coords[0] + beta * tex_coords[1] + gamma * tex_coords[2];
+                    auto interpolated_normal = (alpha * normal[0] + beta * normal[1] + gamma * normal[2]);
+                    auto interpolated_texcoords = (alpha * tex_coords[0] + beta * tex_coords[1] + gamma * tex_coords[2]);
 
-                    Eigen::Vector3f interpolated_shadingcoords = alpha * t.tex->getColor(tex_coords[0].x(), tex_coords[0].y()) + beta * t.tex->getColor(tex_coords[1].x(), tex_coords[1].y()) + gamma * t.tex->getColor(tex_coords[2].x(), tex_coords[2].y());
+
+                    Eigen::Vector3f interpolated_shadingcoords = (alpha * view_pos[0]+ beta * view_pos[1] + gamma * view_pos[2]).normalized();
 
                     fragment_shader_payload payload(interpolated_color, interpolated_normal.normalized(), interpolated_texcoords, texture ? &*texture : nullptr);
 
