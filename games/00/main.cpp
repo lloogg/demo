@@ -1,4 +1,4 @@
-#include <Eigen/Core>
+#include <eigen3/Eigen/Eigen>
 #include <iostream>
 int main()
 {
@@ -16,6 +16,17 @@ int main()
 
     Eigen::Vector3f w = translate * rotate * p;
     std::cout << w << std::endl;
+
+    Eigen::Vector3f a(1, 2, 3);
+    Eigen::Vector3f b;
+    Eigen::RowVector3f c;
+    b << 2, 3, 4;
+    c << 2, 3, 4;
+    std::cout << "a.cross(b) = " << a.cross(b) << std::endl;
+    std::cout << "a.cwiseProduct(b) = " << a.cwiseProduct(b) << std::endl;
+    // std::cout << "a.cross3(c) = " << a.cross3(c) << std::endl;
+    std::cout << "a * c = " << a * c << std::endl;
+    std::cout << "c * a = " << c * a << std::endl;
 
     return 0;
 }

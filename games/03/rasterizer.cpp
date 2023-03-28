@@ -290,7 +290,8 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                     // TODO: Interpolate the attributes:
                     auto interpolated_color = alpha * color[0] + beta * color[1] + gamma * color[2];
                     auto interpolated_normal = (alpha * normal[0] + beta * normal[1] + gamma * normal[2]);
-                    auto interpolated_texcoords = (alpha * tex_coords[0] + beta * tex_coords[1] + gamma * tex_coords[2]);
+                    auto interpolated_texcoords = interpolate(alpha, beta, gamma, tex_coords[0], tex_coords[1],tex_coords[2], 1);
+                    // auto interpolated_texcoords = (alpha * tex_coords[0] + beta * tex_coords[1] + gamma * tex_coords[2]);
 
 
                     Eigen::Vector3f interpolated_shadingcoords = (alpha * view_pos[0]+ beta * view_pos[1] + gamma * view_pos[2]).normalized();
