@@ -31,10 +31,10 @@ function App() {
   function initVertexBuffers(gl) {
     //prettier-ignore
     const verticesColors = new Float32Array([
-      -0.5, 0.5, 0, 1, 0, 10, 0, 1,
-      -0.5, -0.5, 1, 0, 0, 10, 0, 0,
-      0.5, 0.5, 0, 0, 1, 10, 1, 1,
-      0.5, -0.5, 1, 0, 1, 5, 1, 0,
+      -0.5, 0.5, 0, 1, 0, 10, -0.3, 1.7,
+      -0.5, -0.5, 1, 0, 0, 10, -0.3, -0.2,
+      0.5, 0.5, 0, 0, 1, 10, 1.7, 1.7,
+      0.5, -0.5, 1, 0, 1, 5, 1.7, -0.2,
     ]);
     const n = 4;
     const vertexBuffer = gl.createBuffer();
@@ -90,6 +90,8 @@ function App() {
 
     // 配置纹理参数
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
     // 配置纹理图像
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
